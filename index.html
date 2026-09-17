@@ -1,0 +1,1463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Onboarding and Enablement Hub</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+<link rel="alternate icon" href="assets/favicon.png" />
+<style>
+  @font-face{font-family:"Tiempos Text";src:url("fonts/tiempos-text-regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap;}
+  @font-face{font-family:"Tiempos Text";src:url("fonts/tiempos-text-regular-italic.woff2") format("woff2");font-weight:400;font-style:italic;font-display:swap;}
+  @font-face{font-family:"National 2";src:url("fonts/national-2-regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap;}
+  @font-face{font-family:"National 2";src:url("fonts/national-2-regular-italic.woff2") format("woff2");font-weight:400;font-style:italic;font-display:swap;}
+  @font-face{font-family:"National 2";src:url("fonts/national-2-bold.woff2") format("woff2");font-weight:700;font-style:normal;font-display:swap;}
+  @font-face{font-family:"National 2";src:url("fonts/national-2-bold-italic.woff2") format("woff2");font-weight:700;font-style:italic;font-display:swap;}
+
+  :root{
+    --graphite:#1E1E1E; --white:#FFFFFF; --paper:#F7F4EF; --sand:#EEE7D7;
+    --ink:#544946; --orange:#FF551D; --blue:#2354FF; --ivory:#E1DFDB;
+    --serif:"Tiempos Text",Georgia,serif; --sans:"National 2",Arial,sans-serif;
+    /* Status tokens drawn from the brand palette only. */
+    --ok:#1E1E1E; --warn:#544946; --err:#FF551D;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{font-family:var(--sans); color:var(--graphite); background:var(--paper);
+    line-height:1.55; letter-spacing:-0.02em; -webkit-font-smoothing:antialiased;}
+  h1,h2,.serif{font-family:var(--serif); letter-spacing:-0.02em; font-weight:400;}
+  h3,h4,h5{font-family:var(--sans); font-weight:700; letter-spacing:-0.02em;}
+  a{color:var(--blue); text-decoration:none;} a:hover{text-decoration:underline;}
+  button{font-family:inherit; cursor:pointer;}
+  .wrap{max-width:1160px; margin:0 auto; padding:0 26px;}
+  .jwrap{max-width:1560px; margin:0 auto; padding:0 30px;}
+  .eyebrow{font-size:12.5px; color:var(--ink); margin:0 0 10px;}
+
+  .btn-primary{background:var(--blue); color:var(--white); border:none; border-radius:8px;
+    padding:12px 22px; font-size:14.5px; font-weight:700;}
+  .btn-primary:hover{filter:brightness(1.07);}
+  .btn-ghost{background:var(--white); color:var(--graphite); border:1px solid var(--ink);
+    border-radius:8px; padding:11px 18px; font-size:14px; font-weight:700;}
+  .btn-ghost:disabled{opacity:.4; cursor:not-allowed;}
+
+  /* Testing notice */
+  .testbar{background:var(--graphite); color:var(--white); text-align:center; font-size:12.5px; padding:8px 16px;}
+  .gate-test{background:var(--sand); border-left:3px solid var(--orange); border-radius:8px;
+    padding:12px 14px; font-size:13px; color:var(--graphite); margin:0 0 18px; line-height:1.5;}
+
+  /* Top bar */
+  .topbar{position:sticky; top:0; z-index:40; background:var(--white); border-bottom:1px solid var(--ivory);}
+  .topbar .inner{max-width:1560px; margin:0 auto; padding:14px 30px; display:flex; align-items:center; gap:16px;}
+  .brand{display:flex; align-items:center; gap:14px;}
+  .brand .mark{font-size:14px; font-weight:700; padding-right:14px; border-right:1px solid var(--ivory);}
+  .brand .prod .n{font-size:16px; font-weight:700; line-height:1.15;}
+  .brand .prod .s{font-size:12px; color:var(--ink);}
+  .topbar .spacer{flex:1;}
+  .role-chip{display:none; font-size:12.5px; color:var(--ink); background:var(--sand); border-radius:999px; padding:5px 12px;}
+  body[data-screen="journey"] .role-chip, body[data-screen="done"] .role-chip{display:inline-flex;}
+  .tlink{font-size:13.5px;}
+  .lrs-badge{display:none; align-items:center; gap:10px; font-size:12px; padding:5px 12px;
+    border:1px solid var(--ivory); border-radius:999px; background:var(--white);}
+  .lrs-badge .lrs-dot{width:9px; height:9px; border-radius:50%; background:var(--ivory); flex:none;}
+  .lrs-badge.live .lrs-dot{background:var(--ok);} .lrs-badge.sending .lrs-dot{background:var(--warn);}
+  .lrs-badge.error .lrs-dot{background:var(--err);}
+  .lrs-badge .lrs-status{font-weight:700;}
+  .lrs-badge .lrs-email{color:var(--ink); border-left:1px solid var(--ivory); padding-left:10px;
+    max-width:190px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .lrs-badge .lrs-count{color:var(--ink);}
+
+  /* Gate */
+  .gate-wrap{min-height:64vh; display:grid; place-items:center; padding:48px 0;}
+  .gate{max-width:480px; width:100%; background:var(--white); border:1px solid var(--ivory); border-radius:14px; padding:38px 34px;}
+  .gate h1{font-size:32px; margin:6px 0 0;}
+  .gate .rule{width:52px; height:3px; background:var(--orange); margin:14px 0 16px; border-radius:2px;}
+  .gate p{font-size:14.5px; color:var(--ink); margin:0 0 20px;}
+  .gate-form{display:flex; gap:10px; flex-wrap:wrap;}
+  .gate-form input{flex:1; min-width:220px; padding:12px 14px; border:1px solid var(--ink); border-radius:8px;
+    font-family:inherit; font-size:14.5px; background:var(--white); color:var(--graphite);}
+  .gate-err{color:var(--err); font-size:13px; margin:12px 0 0; display:none;} .gate-err.show{display:block;}
+  .gate-note{font-size:12px; color:var(--ink); margin:18px 0 0; line-height:1.5;}
+
+  /* Landing */
+  .landing{padding:36px 0 54px;}
+  .landing .hero{max-width:720px;}
+  .landing h1{font-size:40px; line-height:1.1; margin:8px 0 0;} .landing h1 em{font-style:italic;}
+  .landing .rule{width:60px; height:3px; background:var(--orange); margin:16px 0 18px; border-radius:2px;}
+  .landing .lede{font-size:17px; color:var(--ink); margin:0; max-width:60ch;}
+  .cards{display:grid; grid-template-columns:1fr 1fr; gap:20px; margin:30px 0 0;}
+  .card{background:var(--white); border:1px solid var(--ivory); border-radius:14px; padding:20px 22px;
+    display:flex; flex-direction:column; gap:9px; transition:box-shadow .15s, transform .15s;}
+  .card:hover{box-shadow:0 8px 26px rgba(30,30,30,.08); transform:translateY(-2px);}
+  .card h3{margin:0; font-size:18.5px;} .card .who{font-size:13.5px; color:var(--ink); margin:0; line-height:1.45;}
+  .card ul{margin:0; padding-left:17px; font-size:13.5px; color:var(--ink);} .card ul li{margin:3px 0; line-height:1.45;}
+  .card .go{margin-top:auto; align-self:flex-start;}
+
+  /* Journey: wide, center-dominant, side panels pushed out */
+  .journey{display:grid; grid-template-columns:220px minmax(0,1fr) 250px; gap:46px;
+    padding:34px 0 72px; align-items:start;}
+  .rail{background:var(--white); border:1px solid var(--ivory); border-radius:14px; padding:22px; position:sticky; top:82px;}
+  .rail .rtitle{font-size:15px; font-weight:700; margin:0 0 2px;} .rail .rmeta{font-size:12.5px; color:var(--ink); margin:0 0 14px;}
+  .bar{height:6px; background:var(--sand); border-radius:999px; overflow:hidden; margin-bottom:18px;}
+  .bar > span{display:block; height:100%; background:var(--orange); transition:width .25s;}
+  .steps{list-style:none; margin:0; padding:0;}
+  .steps li{display:flex; gap:12px; align-items:flex-start; padding:10px 8px; border-radius:8px; cursor:pointer;}
+  .steps li:hover,.steps li.active{background:var(--paper);}
+  .steps li .stxt{font-size:13.5px; line-height:1.35; color:var(--graphite);}
+
+  .stage{background:var(--white); border:1px solid var(--ivory); border-radius:14px; padding:38px 44px;}
+  .stage h2{font-size:30px; margin:8px 0 16px;}
+  .section-body{font-size:16px; color:var(--graphite); max-width:70ch;}
+  .section-body p{margin:0 0 14px; color:var(--ink);}
+  .section-body h4{font-size:19px; margin:26px 0 10px; color:var(--graphite);}
+  .section-body ul{margin:0 0 18px; padding-left:20px;}
+  .section-body li{margin:6px 0; color:var(--ink);}
+  .more-line{font-size:14.5px; color:var(--ink); margin:6px 0 16px;
+    padding:12px 16px; background:var(--paper); border:1px solid var(--ivory); border-radius:10px;}
+
+  /* Awaiting asset */
+  .pending{display:grid; grid-template-columns:auto 1fr; gap:7px 16px; align-items:baseline;
+    background:var(--paper); border:1px solid var(--ivory); border-left:3px solid var(--orange);
+    border-radius:10px; padding:15px 18px; margin:0 0 6px; font-size:13.5px;}
+  .pending .pl{color:var(--ink); font-weight:700; white-space:nowrap;}
+  .pending .pv{color:var(--graphite);}
+
+  /* Version stamp */
+  .vstamp{border-top:1px solid var(--ivory); background:var(--white);}
+  .vstamp .vinner{max-width:1560px; margin:0 auto; padding:18px 30px; font-size:12px; color:var(--ink);}
+
+  /* Embeds */
+  .embed{margin:0 0 8px; border:1px solid var(--ivory); border-radius:12px; overflow:hidden; background:var(--white);}
+  .embed.video .vwrap{padding:56.25% 0 0 0; position:relative;}
+  .embed.video iframe{position:absolute; top:0; left:0; width:100%; height:100%; border:0;}
+  .embed.pdf{background:var(--white);}
+  .pdfbar{display:flex; align-items:center; justify-content:center; gap:16px; padding:10px 12px;
+    border-bottom:1px solid var(--ivory); background:var(--paper);}
+  .pdfbar button{background:var(--white); border:1px solid var(--ink); color:var(--graphite);
+    border-radius:7px; padding:7px 14px; font-size:13px; font-weight:700;}
+  .pdfbar button:disabled{opacity:.4; cursor:not-allowed;}
+  .pdfcount{font-size:13px; color:var(--ink); min-width:110px; text-align:center;}
+  .pdfstage{display:flex; justify-content:center; padding:18px; background:var(--sand); min-height:300px;}
+  #pdfcanvas{max-width:100%; height:auto; box-shadow:0 3px 14px rgba(30,30,30,.12); background:var(--white);}
+  .pdferr{padding:40px; color:var(--ink); font-size:14px; text-align:center;}
+
+  .stage-foot{display:flex; align-items:center; gap:14px; margin-top:22px; flex-wrap:wrap;}
+
+  /* Finder */
+  .finder{border:1px solid var(--ivory); border-radius:14px; background:var(--white); overflow:hidden; position:sticky; top:82px;}
+  .finder-head{width:100%; display:flex; align-items:center; gap:14px; text-align:left; background:none; border:none; padding:16px 18px;}
+  .finder-head:hover{background:var(--paper);}
+  .fh-txt{display:flex; flex-direction:column; flex:1;}
+  .fh-title{font-size:14.5px; font-weight:700;} .fh-sub{font-size:12.5px; color:var(--ink); margin-top:2px;}
+  .finder .chev{font-size:13px; color:var(--ink);}
+  .finder-body{display:none; padding:2px 18px 18px; border-top:1px solid var(--ivory);} .finder.open .finder-body{display:block;}
+  .cgroup{padding:14px 0; border-bottom:1px solid var(--ivory);} .cgroup:last-child{border-bottom:none;}
+  .clabel{display:block; font-size:12px; color:var(--ink); margin-bottom:10px;}
+  .chips{display:flex; flex-wrap:wrap; gap:8px;}
+  .chip{font-size:13px; color:var(--graphite); background:var(--white); border:1px solid var(--ivory); border-radius:999px; padding:7px 14px;}
+  .chip:hover{border-color:var(--blue); color:var(--blue);}
+  .chip.active{border-color:var(--blue); color:var(--blue); box-shadow:inset 0 0 0 1px var(--blue);}
+
+  /* Completion */
+  .done-wrap{max-width:660px; margin:64px auto; text-align:center; background:var(--white); border:1px solid var(--ivory); border-radius:14px; padding:48px 44px;}
+  .done-wrap .check{width:60px; height:60px; border-radius:50%; background:var(--ink); color:var(--white); display:grid; place-items:center; margin:0 auto 20px; font-size:28px;}
+  .done-wrap h2{font-size:28px; margin:0 0 12px;} .done-wrap p{color:var(--ink); margin:0 auto 24px; max-width:48ch; font-size:15.5px;}
+  .next-cards{display:grid; grid-template-columns:1fr 1fr; gap:14px; text-align:left; margin:26px 0 30px;}
+  .next-cards .nc{border:1px solid var(--ivory); border-radius:10px; padding:16px 18px;}
+  .next-cards .nc .h{font-weight:700; font-size:14.5px; margin:0 0 4px;} .next-cards .nc .d{font-size:13px; color:var(--ink); margin:0;}
+  .switch{margin-top:16px; font-size:13px; background:none; border:none; color:var(--blue); padding:0;} .switch:hover{text-decoration:underline;}
+
+  @media (max-width:1024px){
+    .journey{grid-template-columns:1fr; gap:26px;}
+    .rail,.finder{position:static;}
+    .cards{grid-template-columns:1fr;}
+    .next-cards{grid-template-columns:1fr;}
+    .landing h1{font-size:30px;}
+    .stage{padding:28px 24px;}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none !important;}}
+  :focus-visible{outline:2px solid var(--blue); outline-offset:2px;}
+
+  /* ---- Draft 0.2 ---- */
+  .brand img.mark{height:30px; width:auto; display:block; padding-right:14px; border-right:1px solid var(--ivory);}
+  .top-switch{font-size:13px; color:var(--blue); font-weight:700; text-decoration:none; margin-left:12px;}
+  body[data-screen="gate"] .top-switch, body[data-screen="landing"] .top-switch{display:none;}
+
+  .journey{gap:32px;}
+  .stage{padding:34px 30px;}
+  .pdfstage{padding:10px;}
+  .cards{grid-template-columns:repeat(auto-fit,minmax(272px,1fr));}
+
+  .doc-tools{display:flex; gap:10px; align-items:center; margin:4px 0 12px; flex-wrap:wrap;}
+  .doc-tools .dt{background:var(--white); border:1px solid var(--ink); color:var(--graphite);
+    border-radius:8px; padding:8px 15px; font-size:13px; font-weight:700; text-decoration:none; display:inline-block;}
+  .doc-tools .dt.primary{border-color:var(--blue); color:var(--blue);}
+
+  .journey.expanded{grid-template-columns:minmax(0,1fr);}
+  .journey.expanded .rail, .journey.expanded .finder{display:none;}
+
+  .lock-note{margin:16px 0 0; padding:14px 17px; background:var(--paper); border:1px solid var(--ivory);
+    border-left:3px solid var(--orange); border-radius:10px; font-size:13.5px; color:var(--ink);}
+  .btn-primary:disabled{opacity:.45; cursor:not-allowed;}
+
+  .resume{display:flex; gap:13px; align-items:center; flex-wrap:wrap; margin:0 0 22px; padding:15px 18px;
+    background:var(--sand); border:1px solid var(--ivory); border-radius:12px; font-size:14px; color:var(--graphite);}
+  .resume .rtxt{flex:1 1 260px;}
+  .resume .ra{background:var(--blue); color:var(--white); border:none; border-radius:7px; padding:8px 16px; font-size:13px; font-weight:700;}
+  .resume .rb{background:transparent; border:1px solid var(--ink); color:var(--graphite); border-radius:7px;
+    padding:8px 16px; font-size:13px; font-weight:700;}
+
+
+
+  .seealso{margin:22px 0 0; padding:18px 20px; background:var(--paper);
+    border:1px solid var(--ivory); border-radius:12px;}
+  .seealso .salabel{font-size:11.5px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase;
+    color:var(--ink); margin:0 0 12px;}
+  .seealso ul{list-style:none; margin:0; padding:0;}
+  .seealso li{margin:0 0 13px;}
+  .seealso li:last-child{margin-bottom:0;}
+  .seealso a{color:var(--blue); font-weight:700; font-size:14.5px; text-decoration:none; display:inline-block;}
+  .seealso a:hover{text-decoration:underline;}
+  .seealso a:focus-visible{outline:2px solid var(--blue); outline-offset:2px; border-radius:3px;}
+  .seealso .ext{font-weight:400;}
+  .seealso .sad{display:block; font-size:13.5px; color:var(--ink); margin:3px 0 0; line-height:1.5;}
+
+  .gate-grid{display:grid; grid-template-columns:1fr 1fr; gap:34px; align-items:start;}
+  .gate-about{padding:8px 0 0;}
+  .gate-about h2{font-size:27px; margin:0 0 16px; max-width:20ch;}
+  .gate-about p{font-size:15px; color:var(--ink); margin:0 0 14px; max-width:52ch; line-height:1.6;}
+  .gate-about .wl{font-size:12px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase;
+    color:var(--ink); margin:22px 0 10px; font-family:var(--sans);}
+  .gate-about ul{margin:0; padding:0 0 0 20px; font-size:14.5px; color:var(--ink); line-height:1.7;}
+  @media (max-width:900px){ .gate-grid{grid-template-columns:1fr; gap:26px;} }
+
+  .callout{background:var(--sand); border-left:3px solid var(--orange); border-radius:8px;
+    padding:15px 17px; margin:16px 0 0; font-size:13.5px; color:var(--graphite); line-height:1.55;}
+  .callout .cl{display:block; font-weight:700; margin:0 0 5px;}
+
+  .resgrid{display:grid; grid-template-columns:1fr 1fr; gap:18px; margin:4px 0 22px;}
+  @media (max-width:900px){ .resgrid{grid-template-columns:1fr;} }
+  .rescard{background:var(--paper); border:1px solid var(--ivory); border-radius:12px; padding:20px 22px;}
+  .rescard h4{font-size:16px; margin:0 0 10px;}
+  .rescard p{font-size:14px; color:var(--ink); margin:0 0 12px; line-height:1.55;}
+  .rescard .rsub{font-size:13px;}
+  .rescard .dt{background:var(--white); border:1px solid var(--blue); color:var(--blue);
+    border-radius:8px; padding:9px 15px; font-size:13.5px; font-weight:700; text-decoration:none; display:inline-block;}
+
+  .reslist{background:var(--white); border:1px solid var(--ivory); border-radius:12px; padding:20px 22px;}
+  .reslist .rlabel{font-size:11.5px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase;
+    color:var(--ink); margin:0 0 14px;}
+  .reslist ul{list-style:none; margin:0; padding:0;}
+  .reslist li{margin:0 0 15px;} .reslist li:last-child{margin-bottom:0;}
+  .reslist a{color:var(--blue); font-weight:700; font-size:14.5px; text-decoration:none;}
+  .reslist a:hover{text-decoration:underline;}
+  .reslist a:focus-visible{outline:2px solid var(--blue); outline-offset:2px; border-radius:3px;}
+  .reslist .sad{display:block; font-size:13.5px; color:var(--ink); margin:3px 0 0; line-height:1.5;}
+
+  .accgroup{margin:2px 0 0;}
+  .acc{border:1px solid var(--ivory); border-radius:10px; margin:0 0 10px; overflow:hidden;}
+  .acc-head{width:100%; display:flex; justify-content:space-between; align-items:center; gap:14px;
+    background:var(--paper); border:none; padding:14px 17px; font-family:var(--sans); font-weight:700;
+    font-size:14.5px; color:var(--graphite); text-align:left; cursor:pointer;}
+  .acc-head .chev{font-size:17px; font-weight:700; color:var(--orange); flex:0 0 auto;}
+  .acc-body{padding:4px 17px 16px; font-size:14px; color:var(--ink); line-height:1.55; background:var(--white);}
+  .acc-body p{margin:0;}
+  .rescard.wide{grid-column:1 / -1;}
+
+  .certrow{margin:16px 0 0;}
+
+  .gate-form.stack{flex-direction:column; align-items:stretch;}
+  .gate-form.stack input{width:100%;}
+  .gate-hint{font-size:13px; color:var(--ink); margin:16px 0 0; line-height:1.55;}
+  .field-hint{font-size:12.5px; color:var(--ink); margin:-2px 0 2px; line-height:1.5;}
+  .gate-warn{color:var(--graphite); background:var(--sand); border-left:3px solid var(--orange);
+    border-radius:8px; padding:12px 15px; font-size:13px; margin:12px 0 0; display:none;}
+  .gate-warn.show{display:block;}
+
+  /* ---- Draft 0.9 ---- */
+  .metarow{display:flex; align-items:center; justify-content:space-between; gap:14px;
+    flex-wrap:wrap; margin:0 0 16px;}
+  .tmeta{display:inline-flex; align-items:center; gap:7px; font-size:12.5px; color:var(--ink);
+    background:var(--paper); border:1px solid var(--ivory); border-radius:999px; padding:5px 13px;}
+  .tmeta .td{width:5px; height:5px; border-radius:50%; background:var(--orange); flex:none;}
+  .sharehub{background:var(--white); border:1px solid var(--ink); color:var(--graphite);
+    border-radius:8px; padding:7px 14px; font-size:13px; font-weight:700; white-space:nowrap;}
+  .sharehub.copied{border-color:var(--blue); color:var(--blue);}
+  body[data-screen="gate"] .sharehub{display:none;}
+  .doc-tools .dt.share{border-color:var(--ink);}
+  .doc-tools .dt.share.copied{border-color:var(--blue); color:var(--blue);}
+  .steps li .smin{display:block; font-size:12px; color:var(--ink); margin-top:2px;}
+
+  .why{margin:36px 0 0; padding:0;}
+  .why h2{font-size:34px; line-height:1.1; margin:0 0 12px;} .why h2 em{font-style:italic;}
+  .why .wlede{font-size:16px; color:var(--ink); margin:0 0 20px; max-width:64ch; line-height:1.6;}
+  .whygrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(258px,1fr)); gap:18px;}
+  .whycard{background:var(--white); border:1px solid var(--ivory); border-radius:12px; padding:22px 24px;}
+  .whycard h4{font-size:15.5px; margin:0 0 8px;}
+  .whycard p{font-size:14px; color:var(--ink); margin:0; line-height:1.55;}
+
+  .oblig{background:var(--sand); border-left:3px solid var(--orange); border-radius:8px;
+    padding:17px 19px; margin:0 0 22px; font-size:14.5px; color:var(--graphite); line-height:1.6;}
+  .oblig .ol{display:block; font-family:var(--sans); font-weight:700; margin:0 0 6px;}
+
+  .exq{border:1px solid var(--ivory); border-radius:12px; margin:4px 0 20px; overflow:hidden; background:var(--white);}
+  .exq-head{width:100%; display:flex; justify-content:space-between; align-items:center; gap:14px;
+    background:var(--paper); border:none; padding:14px 17px; font-family:var(--sans); font-weight:700;
+    font-size:14.5px; color:var(--graphite); text-align:left; cursor:pointer;}
+  .exq-head .chev{font-size:17px; font-weight:700; color:var(--orange); flex:0 0 auto;}
+  .exq-body{padding:17px; border-top:1px solid var(--ivory);}
+  .exq-item{margin:0 0 17px; padding:0 0 17px; border-bottom:1px solid var(--ivory);}
+  .exq-item:last-of-type{margin-bottom:0; padding-bottom:0; border-bottom:none;}
+  .exq-lab{font-size:11.5px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase;
+    color:var(--ink); margin:0 0 8px;}
+  .exq-case{font-size:13.5px; color:var(--ink); margin:0 0 9px; line-height:1.55;}
+  .exq-q{font-size:14.5px; color:var(--graphite); margin:0; line-height:1.6; padding:13px 16px;
+    background:var(--paper); border:1px solid var(--ivory); border-left:3px solid var(--orange); border-radius:8px;}
+  .exq-foot{font-size:13.5px; color:var(--ink); margin:17px 0 0; line-height:1.55;}
+
+  .srcnote{font-size:13.5px; color:var(--ink); margin:0 0 4px; line-height:1.55;}
+  .srclist{columns:2; column-gap:28px; margin:13px 0 0; padding:0; list-style:none;}
+  .srclist li{font-size:13.5px; color:var(--ink); margin:0 0 7px; break-inside:avoid; line-height:1.45;}
+  .srcmore{font-size:13px; color:var(--ink); margin:13px 0 0;}
+  @media (max-width:700px){ .srclist{columns:1;} }
+
+  /* ---- Draft 0.10 ---- */
+
+  /* Rail. Dots rather than numbers, because numbers read as a required sequence.
+     A viewed step fills its dot and shifts its background, which is quieter than a
+     completion tick and truer to what the record actually knows. */
+  .steps li .mk{flex:none; width:16px; height:16px; margin-top:4px; display:grid; place-items:center;}
+  .steps li .dotsvg circle.ring{fill:var(--white); stroke:var(--ivory); stroke-width:1.5;}
+  .steps li.active .dotsvg circle.ring{stroke:var(--orange); stroke-width:2;}
+  .steps li.done .dotsvg circle.ring{fill:var(--orange); stroke:var(--orange);}
+  .steps li.done{background:var(--paper);}
+  .steps li.done.active{background:var(--sand);}
+  .vchk{display:inline-flex; align-items:center; gap:5px;}
+  .vchk svg{flex:none;}
+
+  /* Wrap up in the rail: a terminal entry, set apart and unavailable until every
+     content step has been viewed. */
+  .steps li.term{margin-top:10px; padding-top:16px; border-top:1px solid var(--ivory);
+    border-radius:0 0 8px 8px;}
+  .steps li.term .stxt{font-weight:700;}
+  .steps li.term.islocked{opacity:.45; cursor:not-allowed;}
+  .steps li.term.islocked:hover{background:none;}
+  .steps li.term .dotsvg rect{fill:var(--white); stroke:var(--ivory); stroke-width:1.5;}
+  .steps li.term.ready .dotsvg rect{fill:var(--orange); stroke:var(--orange);}
+  .steps li.term.active .dotsvg rect{stroke:var(--orange); stroke-width:2;}
+
+  .railtip{margin:10px 0 0; padding:12px 14px; background:var(--paper);
+    border:1px solid var(--ivory); border-left:3px solid var(--orange); border-radius:9px;
+    font-size:12.5px; color:var(--graphite); line-height:1.5;
+    opacity:0; visibility:hidden; transform:translateY(-3px); height:0; padding-top:0; padding-bottom:0;
+    transition:opacity .14s, transform .14s, visibility .14s;}
+  .steps li.term.islocked:hover + .railtip,
+  .steps li.term.islocked:focus + .railtip,
+  .railtip.show{opacity:1; visibility:visible; transform:translateY(0); height:auto;
+    padding-top:12px; padding-bottom:12px;}
+  .railtip .rt{display:block; font-weight:700; margin:0 0 6px;}
+  .railtip ul{list-style:none; margin:0; padding:0;}
+  .railtip li{margin:0 0 3px; font-size:12.5px;}
+  .railtip .anyorder{margin:8px 0 0; color:var(--ink); font-size:12px;}
+
+  /* ---- wrap up stage ---- */
+  .wrapintro{font-size:16px; color:var(--ink); margin:0 0 6px; max-width:68ch; line-height:1.6;}
+  .asof{font-size:12.5px; color:var(--ink); margin:0 0 26px;}
+  .newsgrp{margin:0 0 28px;}
+  .newsgrp:last-of-type{margin-bottom:0;}
+  .newsgrp h4{font-size:12px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase;
+    color:var(--ink); margin:0 0 12px; padding-bottom:8px; border-bottom:1px solid var(--ivory);}
+  .newsitem{margin:0 0 16px;}
+  .newsitem:last-child{margin-bottom:0;}
+  .newsitem .nh{font-family:var(--sans); font-weight:700; font-size:15px; margin:0 0 4px; color:var(--graphite);}
+  .newsitem .nd{font-size:14.5px; color:var(--ink); margin:0; line-height:1.55; max-width:70ch;}
+
+  /* ---- gate, two blocks on the left ---- */
+  .gate-about h2.gh{font-size:40px; line-height:1.08; margin:0 0 16px; max-width:22ch;}
+  .gate-about .one{font-size:17px; color:var(--ink); margin:0; max-width:48ch; line-height:1.6;}
+  .gate-why{margin:34px 0 0;}
+  .gate-why h2{font-size:34px; line-height:1.1; margin:0 0 12px;}
+  .gate-why h2 em{font-style:italic;}
+  .gate-why p{font-size:15px; color:var(--ink); margin:0; max-width:50ch; line-height:1.6;}
+
+  /* ---- Brand layering device, landing screen ----
+     Portrait rectangles at 3 by 4, one image per rectangle, offset in
+     sequence, with a single Vital Orange rectangle for brand recognizability.
+     Static and decorative: no animation, and hidden from assistive technology,
+     since repetitive moving patterns can affect vestibular sensitivity. */
+  .ltop{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:52px; align-items:center;}
+  .lleft .cards{margin:34px 0 0;}
+  .layers{position:relative; width:370px; height:453px;}
+  .layers .lyr{position:absolute; width:250px; height:333px; border-radius:3px;
+    overflow:hidden; box-shadow:0 10px 30px rgba(30,30,30,0.13);}
+  .layers .lyr img{width:100%; height:100%; object-fit:cover; display:block;}
+  .layers .lyr .orng{display:block; width:100%; height:100%; background:var(--orange);}
+  .layers .lyr-0{left:120px; top:0;     z-index:1;}
+  .layers .lyr-1{left:96px;  top:24px;  z-index:2;}
+  .layers .lyr-2{left:72px;  top:48px;  z-index:3;}
+  .layers .lyr-3{left:48px;  top:72px;  z-index:4;}
+  .layers .lyr-4{left:24px;  top:96px;  z-index:5;}
+  .layers .lyr-5{left:0;     top:120px; z-index:6;}
+  @media (max-width:1023px){
+    .ltop{grid-template-columns:1fr; gap:0;}
+    .layers{display:none;}
+    .lleft .cards{margin-top:30px;}
+  }
+</style>
+</head>
+<body data-screen="gate">
+  <div class="testbar" id="testbar">Testing environment. Do not enter a real email address. Use a placeholder such as fakename@email.com.</div>
+  <header class="topbar">
+    <div class="inner">
+      <div class="brand">
+        <img class="mark" src="assets/elsevier-logo-graphite.svg" alt="Elsevier" />
+        <div class="prod"><div class="n">Onboarding and Enablement Hub</div><div class="s">Customer Hub</div></div>
+      </div>
+      <span class="role-chip" id="roleChip">&mdash;</span>
+      <a class="top-switch" href="#" data-action="restart">Switch path</a>
+      <span class="spacer"></span>
+      <button class="sharehub" data-action="share-hub">Share this hub</button>
+      <span id="lrs-badge" class="lrs-badge">
+        <span class="lrs-dot"></span><span class="lrs-status">LRS idle</span>
+        <span class="lrs-email"></span><span class="lrs-count">0 sent</span>
+      </span>
+      <a class="tlink" href="https://www.elsevier.support/clinicalkeyai" target="_blank" rel="noopener">Need help? Support Center</a>
+    </div>
+  </header>
+  <main id="app"></main>
+  <footer class="vstamp"><div class="vinner">Draft 0.11 · 17 September 2026 · Internal review copy, not for customer distribution</div></footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* Single switch for everything that should not be seen outside testing.
+     Set to false for a customer-facing or executive demo build: it hides the
+     testing banner and the learning-record badge. Nothing else changes. */
+  var TESTING = false;
+
+  var VIMEO = "https://player.vimeo.com/video/1210247360?h=cb3fa7da1d&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479";
+  var GUIDE_GS  = "https://media.ffycdn.net/eu/elsevier/d/DVDiXShQwr4sPD69";
+  var GUIDE_CME = "https://media.ffycdn.net/eu/elsevier/d/8gqsRamQhZhd4cUy";
+  /* Frontify share page, not a direct asset URL. Needs the media.ffycdn.net link to render inline. */
+  var GUIDE_APP = "https://brand.elsevier.com/share/mPTZXMnPQSph3J73ZdTY";
+
+  /* Frontify share pages are used for the download action. The inline viewer reads the
+     copy committed under /docs, because a share page is not a direct asset URL. */
+  var SHARE = {
+    gs:   "https://brand.elsevier.com/share/5sNLdjxYFzcezdF7Mvte",
+    faq:  "https://brand.elsevier.com/share/YUzTAmL7a9maUtk1jTMV",
+    user: "https://brand.elsevier.com/share/94og1N5mGmEGYUPodqsf",
+    impl: "https://brand.elsevier.com/share/7M5aciJ18Mu571Ctqduh",
+    sso:  "https://brand.elsevier.com/share/7RfRUvvXvbPpfy4oFdND",
+    ehr:  "https://brand.elsevier.com/share/cvoE7xN8HcmFkGrJf6FY",
+    link: "https://brand.elsevier.com/share/hn8Y1GXREf1eSffJy2Vs"
+  };
+  /* Supporting resources. Administrator pathway only, per John, 17 August.
+     Surfaced together on the Additional resources and contacts step rather than
+     inline, so there is one place to maintain them. */
+  var RES = [
+    {t:"The technology behind ClinicalKey AI",
+     d:"How retrieval augmented generation works, and why grounding answers in a curated library is what keeps them reliable. Useful when a clinician asks how it actually works.",
+     u:"https://brand.elsevier.com/share/1LHtnsHnpfZz16i9QZTy"},
+    {t:"Transforming hospital medicine with AI",
+     d:"Five insights from the Society of Hospital Medicine executive round table on where AI reduces clinician workload and where it quietly adds to it.",
+     u:"https://brand.elsevier.com/share/uEZRBeL2MBsxZgwzCbgn"},
+    {t:"Implementing and adopting clinical AI at scale",
+     d:"Dr Claudine Lott on what actually drove adoption at institutions already running ClinicalKey AI, from a ViVE 2026 case study session.",
+     u:"https://brand.elsevier.com/share/UzYT8eEM4w5oxvW9SHL8"}
+  ];
+
+  var SUPPORT_URL = "https://www.elsevier.support/clinicalkeyai";
+
+  /* Canonical customer-facing address of this experience, supplied by Andrew 31 August.
+     Used to build shareable per-step links. The hub itself runs inside an iframe on this
+     page, so script here cannot read or write the parent URL. The link is therefore
+     composed from this constant rather than read from location. */
+  var SHARE_BASE = "https://elsevierresources.com/clinicalkey-ai-pilot/cs-ondemand/";
+
+  /* Product home. Sourced from the ClinicalKey AI user guide, access section. */
+  var CKAI_HOME = "https://www.clinicalkey.com/ai";
+
+  /* Why ClinicalKey AI. Landing page, below the path cards. Drawn from the ClinicalKey AI
+     value story in the CSM Knowledge Center, supplied by John 26 August. Positioning is
+     acceleration layer, not authority. */
+  var WHY = [
+    {t:"Trusted content",
+     d:"Elsevier and non-Elsevier sources curated by subject matter experts. Full text books, journals, clinical overviews, drug monographs, and society guidelines, rather than the open web."},
+    {t:"Verifiable answers",
+     d:"Every response carries citations and links through to the full text, so you can check the claim against the source. A clinician evaluation team reviews response quality on an ongoing basis."},
+    {t:"Built for clinical use",
+     d:"Individual sign-in, GDPR baseline compliance, and queries that are not used to train public models. Epic integration through SMART on FHIR where your institution has set it up."}
+  ];
+
+  /* Professional obligation framing, step one of each clinical path. Administrator is
+     deliberately excluded, per John 26 August: faculty and admin do not carry the same
+     duty of care. Register is obligation, not benefit, per the Quinnipiac session. */
+  var OBLIGATION = {
+    user: "If you are going to rely on a tool in practice, you need to know what it does and what it cannot do. The same standard you apply to an ECG tracing or a lab assay applies here. Understand how the answer was produced before you act on it. This path is the short version of that."
+  };
+
+  /* Example queries. Requested by Matt Wilcox, Quinnipiac, 25 August: show do not tell,
+     ideally a case presentation alongside the query built from it.
+     NURSE examples are quoted verbatim from the ClinicalKey for Nursing AI prompt tips guide.
+     CLINICIAN examples are newly drafted and are AWAITING CLINICAL REVIEW.
+     Do not publish externally before Kristen Wussler or Hagar Kassab has signed them off. */
+  var EXQ = {
+    user: {
+      label: "See example queries",
+      items: [
+        {lab:"Start from a case presentation",
+         c:"72-year-old man, stage 3 chronic kidney disease and atrial fibrillation, admitted with an upper gastrointestinal bleed while taking apixaban.",
+         q:"In a patient with stage 3 chronic kidney disease and atrial fibrillation who has had an upper gastrointestinal bleed on apixaban, what are the anticoagulation options once bleeding is controlled, and what evidence supports each?"},
+        {lab:"Name the population and the decision",
+         c:"You want options with rationale rather than a single recommendation.",
+         q:"In an adult with newly diagnosed heart failure with reduced ejection fraction, what is the recommended sequence for initiating guideline-directed medical therapy, and what governs the order?"},
+        {lab:"Ask a follow-up rather than restating",
+         c:"The first answer covered a broader population than the patient in front of you.",
+         q:"How does that change in a patient over 75 with stage 3 chronic kidney disease?"}
+      ],
+      foot: "ClinicalKey AI also offers suggested prompts on the home page and search tips above the question field."
+    }
+  };
+
+
+  var CALL_URL    = "https://elsevierresources.com/customer-support/";
+
+  /* Adoption kit, requested by John 19 August. Lives on Resource Center;
+     exact URL still to come from him. Rendered as its own boxed section on
+     Additional Resources and Contacts rather than folded into further
+     reading, per his note that it needs to stand alone. */
+  var ADOPTION_KIT_URL = "https://elsevierresources.com/clinicalkey-ai/adoption-kit/"; // confirmed by John Grooms, 19 August
+
+  /* Content sources. Live pages on the Resource Center, linked rather than reproduced.
+     Requested by both prototype reviewers on 6 August. */
+  var SOURCES = [
+    {t:"Content sources",
+     d:"What ClinicalKey AI draws on, by content type. The short answer when a clinician asks where a response came from.",
+     u:"https://elsevierresources.com/clinicalkey-ai/content-sources/"},
+    {t:"Master content list",
+     d:"The full title-level list. What your librarian will want when checking coverage against your existing holdings.",
+     u:"https://elsevierresources.com/clinicalkey-ai/master-content-list/"}
+  ];
+
+  var DOC = {
+    faq:  "docs/ck-ai-faq.pdf",
+    user: "docs/ck-ai-user-guide.pdf",
+    impl: "docs/ck-ai-implementation-toolkit.pdf",
+    sso:  "docs/ck-ai-saml-sso-guide.pdf",
+    ehr:  "docs/ck-ai-ehr-integration.pdf",
+    link: "docs/ck-ai-link-resolver-setup.pdf",
+    app:  "docs/ck-ai-app-guide.pdf"
+  };
+
+  var bodyGetStarted =
+    '<p>ClinicalKey AI pairs trusted, evidence-based content with generative AI, so you can turn a clinical question into a clear, cited answer at the point of care. This section orients you to the landing page and to asking questions that get the best response.</p>'+
+    '<h4>How to complete the key actions</h4><ul>'+
+    '<li>Ask in natural language. Phrase a full, specific clinical question the way you would ask a colleague, rather than entering keywords.</li>'+
+    '<li>Be explicit. Name the demographic, condition, or drug you care about, since responses are succinct and cover a broad population by default.</li>'+
+    '<li>Set the population focus using the All Ages, Adult, or Pediatrics toggle.</li>'+
+    '<li>Verify the answer. Expand Show Details on any citation to read the source excerpt, and use the suggested follow-up questions to refine.</li>'+
+    '<li>Save or share a question, and switch to a supported language when the toggle appears.</li>'+
+    '<li>Avoid protected health information, using it as a calculator or scoring tool, asking about medication cost or coverage, or asking for the single best choice. Ask for options with rationale instead.</li>'+
+    '</ul>';
+
+  var bodyCme =
+    '<p>Every AI-generated response in ClinicalKey AI is worth 0.5 CME credit. The CME icon shows your running total and launches the CME/MOC dashboard, where you can redeem CME and submit MOC to specialty boards.</p>'+
+    '<h4>How to complete the key actions</h4><ul>'+
+    '<li>Earn: each ClinicalKey AI response accrues 0.5 CME automatically; the badge updates when the home page refreshes.</li>'+
+    '<li>Redeem CME: open Redeem CME, select your Conversational Search queries, click Assign, add a reason and applied use, then Continue and complete the required seven-question evaluation.</li>'+
+    '<li>Track: review redeemed credits and print transcripts from the Overview or CME History pages.</li>'+
+    '<li>Set up MOC: under Manage Boards, add each specialty board and its Board ID (up to eight ACCME-accredited boards).</li>'+
+    '<li>Redeem MOC: select the boards, attest that the content is relevant to your specialty, then submit and check status under MOC History.</li>'+
+    '</ul>';
+
+  /* Content sources. Title lists are a representative selection, not the full corpus;
+     the master content list is linked below and remains authoritative. Editions are
+     deliberately omitted so the page does not go stale on the next release. */
+  var SOURCE_CATS = [
+    {t:"Point of care content",
+     d:"Continuously maintained summaries written for use during a patient encounter. Most responses draw on these first.",
+     l:["Elsevier Clinical Overviews",
+        "Elsevier Gold Standard Drug Monographs",
+        "Elsevier Gold Standard Drug Class Overviews"]},
+    {t:"Journal articles and abstracts",
+     d:"Full text articles and abstracts from more than 1,100 journals, including the past 10 years of coverage. A selection of the titles included:",
+     l:["The New England Journal of Medicine","The Lancet","JACC","Gastroenterology","Chest",
+        "Annals of Emergency Medicine","Journal of Allergy and Clinical Immunology","Ophthalmology",
+        "Kidney International","European Urology","Journal of the American Academy of Dermatology",
+        "The American Journal of Medicine"]},
+    {t:"Reference books",
+     d:"Established clinical texts, kept current as new editions and corrections are published. A selection of the titles included:",
+     l:["Goldman-Cecil Medicine","Nelson Textbook of Pediatrics","Braunwald\u2019s Heart Disease",
+        "Sabiston Textbook of Surgery","Rosen\u2019s Emergency Medicine","Miller\u2019s Anesthesia",
+        "Mandell, Douglas and Bennett\u2019s Principles and Practice of Infectious Diseases",
+        "Williams Textbook of Endocrinology","Campbell Walsh Wein Urology",
+        "Campbell\u2019s Operative Orthopaedics",
+        "Sleisenger and Fordtran\u2019s Gastrointestinal and Liver Disease",
+        "Brenner and Rector\u2019s The Kidney"]},
+    {t:"Clinical practice guidelines",
+     d:"Society and national guidance, drawn from bodies across specialties. A selection of the organizations included:",
+     l:["American College of Cardiology","American Gastroenterological Association",
+        "American College of Emergency Physicians","American College of Chest Physicians",
+        "American College of Radiology","American Academy of Dermatology",
+        "American Academy of Ophthalmology","American Association of Clinical Endocrinology",
+        "European Society for Medical Oncology (ESMO)","European Association of Urology",
+        "Heart Rhythm Society","National Institute for Health and Care Excellence (NICE)"]},
+    {t:"Government and regulatory publications",
+     d:"Publications from the FDA, CDC, and NLM.",
+     l:[]}
+  ];
+
+  function contentSourcesBody(){
+    var accord = SOURCE_CATS.map(function(c,i){
+      var inner = '<p class="srcnote">'+c.d+'</p>';
+      if(c.l && c.l.length){
+        inner += '<ul class="srclist">'+c.l.map(function(x){return '<li>'+x+'</li>';}).join("")+'</ul>'+
+                 '<p class="srcmore">A selection only. The master content list below carries every title.</p>';
+      }
+      return '<div class="acc"><button class="acc-head" data-action="toggle-acc" data-idx="'+i+'" '+
+        'aria-expanded="'+(state.accOpen[i]?"true":"false")+'"><span>'+c.t+'</span>'+
+        '<span class="chev">'+(state.accOpen[i]?"\u2212":"+")+'</span></button>'+
+        (state.accOpen[i]?'<div class="acc-body">'+inner+'</div>':'')+'</div>';
+    }).join("");
+    return '<p>ClinicalKey AI draws on a curated, evidence-based library rather than the open web. The library brings together Elsevier and non-Elsevier sources, selected by subject matter experts. Here is what it is made of.</p>'+
+      '<div class="accgroup">'+accord+'</div>'+
+      '<p style="margin-top:20px">Update frequency varies by content type, and new or updated content is supplied on a daily basis.</p>'+
+      '<div class="seealso" style="margin-top:6px"><p class="salabel">For a full title level list</p><ul>'+
+      '<li><a href="https://elsevierresources.com/clinicalkey-ai/content-sources/" data-action="open-resource" data-res="https://elsevierresources.com/clinicalkey-ai/content-sources/" data-restitle="Content sources" target="_blank" rel="noopener">Content sources <span class="ext">\u2197</span></a>'+
+      '<span class="sad">What ClinicalKey AI draws on, by content type.</span></li>'+
+      '<li><a href="https://elsevierresources.com/clinicalkey-ai/master-content-list/" data-action="open-resource" data-res="https://elsevierresources.com/clinicalkey-ai/master-content-list/" data-restitle="Master content list" target="_blank" rel="noopener">Master content list <span class="ext">\u2197</span></a>'+
+      '<span class="sad">The full title-level list, for checking coverage against your existing holdings.</span></li>'+
+      '</ul></div>';
+  }
+
+
+  var bodyContact =
+    '<p>If you would rather work through something with a person, here is where to go.</p>';
+
+  var bodyResources =
+    '<p>Where to go once you are past setup, and who to talk to when you need a person rather than a document.</p>';
+
+  var bodyFaq =
+    '<p>The questions customers ask most often, grouped into data privacy and security, user interface, content, technology, and safety and fairness. Worth reading before you field these from your own clinicians.</p>'+
+    '<h4>What this covers</h4><ul>'+
+    '<li>HIPAA and BAA: ClinicalKey AI is designed to meet HIPAA requirements for US customers. Where an active BAA is in place, restrictions on entering PHI in the query field do not apply. Outside the US those provisions do not apply and PHI must not be entered.</li>'+
+    '<li>Content sources: journal article abstracts, medical textbooks, full text clinical overviews, drug monographs, and government publications from the FDA, CDC, and NLM, with new and updated content supplied daily.</li>'+
+    '<li>Hallucinations: the open book design answers every question from a curated library rather than from model memory, which is what keeps responses grounded.</li>'+
+    '<li>Language: questions can be asked in several languages and the answer is returned in both. The underlying content is US English and non-English responses have not been validated.</li>'+
+    '<li>Citations: users typically see six to ten linked, evidence-based citations in a response.</li>'+
+    '</ul>';
+
+  var bodyUser =
+    '<p>The full walkthrough, from signing in to earning credit. Nine sections covering access, asking questions, references, saved questions, feedback, and the mobile app.</p>'+
+    '<h4>How to complete the key actions</h4><ul>'+
+    '<li>Access: sign in at clinicalkey.com/ai. The Help button holds search tips, a product tour, the Get Started guide, and How it works.</li>'+
+    '<li>Ask: set the population focus to All Ages, Pediatrics, or Adults, then enter a clinical question in natural language. The toggle keeps your choice until you change it.</li>'+
+    '<li>Review: read the summary and bulleted response, then expand Additional Information and References for sourcing.</li>'+
+    '<li>Verify: select Details on a reference to see the content that was sourced, or click the title to open it.</li>'+
+    '<li>Save or share: keep a question for later, or share it with a colleague where sharing is configured for your institution.</li>'+
+    '<li>Follow up: use the suggested questions below a response, or ask your own.</li>'+
+    '<li>Earn credit: redeem CME from the response, and register with ClinicalKey for saved content, downloads, and remote access.</li>'+
+    '</ul>';
+
+  var bodyImpl =
+    '<p>The milestones, activities, and strategies behind a successful rollout, typically 30 to 90 days from discovery through to post-implementation.</p>'+
+    '<h4>How to complete the key actions</h4><ul>'+
+    '<li>Work the five phases: discovery and planning, kickoff, awareness and adoption, product launch, and post-implementation.</li>'+
+    '<li>Build four strategies: communication, engagement, change management, and launch.</li>'+
+    '<li>Name your partners. Executive sponsor, project lead, clinical informaticist, librarian, IT resource, superusers, and physician champions each have a defined role and a point at which they join.</li>'+
+    '<li>Plan the touchpoints: a welcome and planning call, kickoff, training sessions, and weekly project meetings.</li>'+
+    '<li>Measure: use the active users and total queries reports to track adoption and reinforce the workflows you want.</li>'+
+    '</ul>';
+
+  var bodySso =
+    '<p>How single sign-on works for ClinicalKey AI, how it compares with username and password access, and what each option asks of your IT team.</p>'+
+    '<h4>How to complete the key actions</h4><ul>'+
+    '<li>Understand the model: clinicians sign in with the organizational credentials they already hold. You validate who they are, and we accept it.</li>'+
+    '<li>Choose your setup: bilateral metadata exchange directly with your systems is available now. Multi-lateral exchange through federations such as InCommon is not yet available.</li>'+
+    '<li>Weigh the alternative: managed user invite uses an email-based username and a strong password, requires a user list from you, and places password resets in the Elsevier identity system rather than your own.</li>'+
+    '<li>Coordinate with IT to configure the metadata exchange. Once SSO is live, users need take no action.</li>'+
+    '</ul>';
+
+  var bodyEhr =
+    '<p>Opening ClinicalKey AI from inside an EHR session using SMART on FHIR, so a clinician reaches an answer without leaving the chart.</p>'+
+    '<h4>How to complete the key actions</h4><ul>'+
+    '<li>Confirm the prerequisite: SAML SSO or username and password access must already be in place, and the email on the ClinicalKey AI profile must match the one in the EHR user profile.</li>'+
+    '<li>Set up the FHIR connection so the application can reach your data, then share your patient-facing and provider-facing endpoint URLs with Elsevier.</li>'+
+    '<li>Allowlist ai.clinicalkey.com at both the network and browser level.</li>'+
+    '<li>Request the application from the vendor app showroom, where it is reviewed and approved by Elsevier.</li>'+
+    '<li>Configure the web application record, then choose a launch type: an external browser window, or the chart sidebar view.</li>'+
+    '</ul>'+
+    '<p><b>Note.</b> The current documentation covers Epic only. Support for other EHRs is on the roadmap, so confirm timing with your Elsevier contact before planning around it.</p>';
+
+  var bodyLink =
+    '<p>A link resolver connects citations in ClinicalKey AI to the full text your library already pays for, so clinicians reach the article rather than a paywall.</p>'+
+    '<h4>How to complete the key actions</h4><ul>'+
+    '<li>Confirm your institution subscribes to a resolver service, for example Ex Libris, EBSCO, or OCLC.</li>'+
+    '<li>Submit a request through the Support Center asking for link resolver setup.</li>'+
+    '<li>Include your resolver base URL, which must support the OpenURL standard. Your systems or e-resources librarian will have it.</li>'+
+    '<li>Supply a logo as a publicly accessible image URL. File uploads are not supported, and the image is scaled to 24 pixels high, so send the best quality version you have, cropped close.</li>'+
+    '<li>Once support confirms setup, check that resolver links appear alongside citations.</li>'+
+    '</ul>';
+
+  var bodyApp =
+    '<p>ClinicalKey AI is available on iOS and Android, so the question you would ask at a workstation can be asked at the bedside. This section covers downloading the app, finding the core features, and using talk-to-text.</p>'+
+    '<h4>How to complete the key actions</h4><ul>'+
+    '<li>Download: scan the Google Play or Apple App Store QR code in the guide. The app is free of charge, but you or your institution must be subscribed to ClinicalKey AI.</li>'+
+    '<li>Sign in using the email address associated with your user profile.</li>'+
+    '<li>Ask: enter your question in natural language in the Ask a question here box, and change the population focus as needed.</li>'+
+    '<li>Claim credit: launch My CME from the app to claim and redeem credits.</li>'+
+    '<li>Open the menu in the top left for references, calculators, and saved and recent questions.</li>'+
+    '<li>Use talk-to-text: tap the microphone inside the question box and speak. A dotted line under the field means it is recording, and pause stops it temporarily.</li>'+
+    '<li>Account settings in the top right hold How It Works, Contact Us and Help, and the Registered User Agreement.</li>'+
+    '</ul>';
+
+  /* News and notes. Served at the wrap up rather than up front, so the path stays
+     focused and the update is something the learner arrives at rather than detours to.
+     Sourced from the ClinicalKey customer newsletters for June and August 2026 and the
+     Q2 2026 quarterly updates flyer. Links are deliberately omitted for this draft.
+
+     THIS CONTENT GOES STALE. It needs a named owner and a refresh cadence before the
+     hub is customer facing. Andrew flagged this; it is not resolved. */
+  var NEWS_ASOF = "Current as of August 2026";
+  var NEWS = [
+    {t:"New in ClinicalKey AI",
+     i:[{h:"Reasoning stepper",
+         d:"A step by step view of how an answer was assembled, so a response is easier to follow and to verify."},
+        {h:"Rerun",
+         d:"Relaunch a previous question in one click, with no copying and pasting."},
+        {h:"Asked on dates",
+         d:"Every question on the response page now carries a timestamp, which makes a long conversation easier to track."},
+        {h:"Invite by link",
+         d:"A single secure link or QR code for your organization. Recipients click, verify their email, and get access, with no single sign-on needed. Your account manager can generate one."}]},
+    {t:"Content added between April and June",
+     i:[{h:"More than 120 additions and updates",
+         d:"12 new book titles, 22 new editions, 15 new journals, 20 new drug monographs, 7 new clinical overviews, and 56 updated clinical overviews."},
+        {h:"Titles worth knowing about",
+         d:"The Harriet Lane Handbook, Campbell\u2019s Operative Orthopaedics, Brenner and Rector\u2019s The Kidney, Netter Atlas of Human Anatomy, Seidel\u2019s Guide to Physical Examination, and Diabeto-Cardiology, second edition."}]},
+    {t:"For administrators",
+     i:[{h:"KBART reports page rebuilt",
+         d:"The reports page on the Resource Center now has search, filters by audience and by edition or market, downloads by content type, a choice of TXT or Excel, and a clearer layout."}]},
+    {t:"Learning and research",
+     i:[{h:"Gen AI Academy for Health",
+         d:"A free, self-paced course on using generative AI responsibly in practice, designated for up to 1.5 AMA PRA Category 1 Credits, with subtitles in English, French, German, Portuguese, Spanish and Turkish."},
+        {h:"Monthly ClinicalKey training sessions",
+         d:"Live sessions in six languages across a range of times, each one recorded if the timing does not work."},
+        {h:"Clinician of the Future 2026",
+         d:"The latest edition looks at how doctors and nurses are responding to current pressures, where trust in AI is growing, and how views differ between the two groups."}]}
+  ];
+
+  var bodyIntro = '<p>A short overview of what ClinicalKey AI is, how it fits into clinical workflow, and what makes its answers different from a general purpose AI tool.</p>';
+
+  var OWNER_SC = "Support Center";
+  function pending(t,o){
+    return '<p>The walkthrough for this section is written and ready. It is waiting on its source asset before the key actions and the embedded guide can be added.</p>'+
+      '<div class="pending"><span class="pl">Awaiting</span><span class="pv">'+t+'</span>'+
+      '<span class="pl">Sourcing</span><span class="pv">'+o+'</span></div>';
+  }
+
+  /* The video sits on the clinician path only. An administrator is deploying the
+     product rather than using it, and in most cases has already seen a tour. */
+  var introStep =
+    {title:"Introducing ClinicalKey AI", type:"video", cat:"Get oriented", concern:"What is ClinicalKey AI?", mins:5,
+     embed:{kind:"vimeo", src:VIMEO}, body:bodyIntro};
+
+  var wrapStep =
+    {title:"Wrap up", type:"wrapup", cat:"Keep going", concern:"What has changed recently?", mins:4};
+
+  var shared = [
+    {title:"Get Started Guide", type:"doc", cat:"Get oriented", concern:"How do I get started?", mins:5, exq:true,
+     embed:{kind:"pdf", src:GUIDE_GS}, guide:SHARE.gs, body:bodyGetStarted},
+    {title:"Frequently Asked Questions", type:"doc", cat:"Get oriented", concern:"Common first questions", mins:7,
+     embed:{kind:"pdf", src:DOC.faq}, guide:SHARE.faq, body:bodyFaq}
+  ];
+  var userSteps = [
+    {title:"User Guide", type:"doc", cat:"Use it day to day", concern:"Everyday tasks, step by step", mins:13,
+     embed:{kind:"pdf", src:DOC.user}, guide:SHARE.user, body:bodyUser},
+    {title:"Earn CME & Redeem MOC Credit", type:"doc", cat:"Continuing education", concern:"Earn CME / redeem MOC credit", mins:6,
+     embed:{kind:"pdf", src:GUIDE_CME}, guide:GUIDE_CME, body:bodyCme},
+    {title:"App Guide", type:"doc", cat:"Use it day to day", concern:"Use it on mobile", mins:5,
+     embed:{kind:"pdf", src:DOC.app}, guide:GUIDE_APP, body:bodyApp},
+    {title:"Content Sources", type:"sources", cat:"Keep going", concern:"What does ClinicalKey AI draw on?", mins:4,
+     body:null},
+    {title:"Contact", type:"resources-clinician", cat:"Keep going", concern:"Where do I go for help?", mins:3,
+     body:bodyContact}
+  ];
+  var adminSteps = [
+    {title:"User Guide", type:"doc", cat:"Know the product", concern:"See what my users see", mins:13,
+     embed:{kind:"pdf", src:DOC.user}, guide:SHARE.user, body:bodyUser},
+    {title:"Implementation Toolkit", type:"doc", cat:"Deploy and configure", concern:"Plan our rollout", mins:9,
+     embed:{kind:"pdf", src:DOC.impl}, guide:SHARE.impl, body:bodyImpl},
+    {title:"SAML SSO Guide", type:"doc", cat:"Deploy and configure", concern:"Configure single sign-on (SSO)", mins:5,
+     embed:{kind:"pdf", src:DOC.sso}, guide:SHARE.sso, body:bodySso},
+    {title:"EHR Integration", type:"doc", cat:"Deploy and configure", concern:"Set up EHR integration", mins:6,
+     embed:{kind:"pdf", src:DOC.ehr}, guide:SHARE.ehr, body:bodyEhr},
+    {title:"Link Resolver Setup", type:"doc", cat:"Deploy and configure", concern:"Connect our library holdings", mins:3,
+     embed:{kind:"pdf", src:DOC.link}, guide:SHARE.link, body:bodyLink},
+    {title:"Additional Resources & Contacts", type:"resources", cat:"Keep going", concern:"Where do I go next?", mins:4,
+     body:bodyResources}
+  ];
+
+  var journeys = {
+    user:  {label:"Clinician path",    steps: [introStep].concat(shared, userSteps, [wrapStep])},
+    admin: {label:"Administrator path", steps: shared.concat(adminSteps, [wrapStep])}
+  };
+
+  /* The wrap up is a rail entry but not a step to be viewed. Progress, the lock, and
+     the counter all run on the content steps alone. */
+  function contentSteps(steps){ return steps.filter(function(x){ return x.type!=="wrapup"; }); }
+  function viewedCount(steps){
+    return contentSteps(steps).filter(function(x){ return state.done[key(x)]; }).length;
+  }
+  function allViewed(steps){ return viewedCount(steps)===contentSteps(steps).length; }
+  function unviewed(steps){
+    var out=[]; steps.forEach(function(x,i){ if(x.type!=="wrapup" && !state.done[key(x)]) out.push({i:i,t:x.title}); });
+    return out;
+  }
+
+  var state = { screen:"gate", role:null, idx:0, done:{}, indexOpen:false, uid:null, org:null,
+                sent:0, lrsStatus:"idle", expanded:false,
+                resumeOffer:null, pdfPageWanted:null, orgWarned:null, accOpen:{},
+                exqOpen:false, deep:null };
+  var app = document.getElementById("app");
+  var roleChip = document.getElementById("roleChip");
+
+  /* ---- xAPI ---- */
+  /* =====================================================================
+     LRS CREDENTIALS
+
+     Fill these in from the dedicated hub Activity Provider in SCORM Cloud.
+     Paste plain text; the Basic header is assembled on the next line, so do
+     not base64 anything yourself.
+
+       Permission level   Read/Write
+       Allowed endpoints  the hub app only, never "all"
+
+     This file is served to every browser, so whatever sits here is readable
+     by anyone using the hub. The Activity Provider scoping limits the damage,
+     not secrecy. Treat any credential placed here as public.
+     ===================================================================== */
+  var LRS = {
+    endpoint: "https://cloud.scorm.com/lrs/O3BIJIXPN6/sandbox/",
+    key:      "TaToh28aeKRXaJXlc1I",
+    secret:   "TYe_QqSfxQ7FSzN8no8"
+  };
+  var AUTH = "Basic " + btoa(LRS.key + ":" + LRS.secret);
+  var ACT_BASE = "https://elsevier-health.github.io/REPO-NAME/";
+  var VERBS = {
+    initialized:{id:"http://adlnet.gov/expapi/verbs/initialized",display:{"en-US":"initialized"}},
+    selected:{id:"http://id.tincanapi.com/verb/selected",display:{"en-US":"selected"}},
+    experienced:{id:"http://adlnet.gov/expapi/verbs/experienced",display:{"en-US":"experienced"}},
+    completed:{id:"http://adlnet.gov/expapi/verbs/completed",display:{"en-US":"completed"}},
+    downloaded:{id:"http://id.tincanapi.com/verb/downloaded",display:{"en-US":"downloaded"}},
+    shared:{id:"http://activitystrea.ms/schema/1.0/share",display:{"en-US":"shared"}},
+    answered:{id:"http://adlnet.gov/expapi/verbs/answered",display:{"en-US":"answered"}},
+    passed:{id:"http://adlnet.gov/expapi/verbs/passed",display:{"en-US":"passed"}},
+    failed:{id:"http://adlnet.gov/expapi/verbs/failed",display:{"en-US":"failed"}}
+  };
+  /* =====================================================================
+     LEARNER IDENTITY
+
+     The address a learner types never leaves the browser. It is run through
+     SHA-256 here and only the hash is sent, as the name of an xAPI account
+     object rather than an mbox.
+
+     Hashing is one way and deterministic, so the same address always gives
+     the same hash. A returning learner still finds their progress and the
+     LRS holds no address. Given a candidate address you can hash it and
+     match a record, which covers deletion and access requests. You cannot
+     work back from stored hashes to a list of people.
+
+     This is pseudonymisation, not anonymisation. Email addresses are low
+     entropy, so a hash still singles out an individual and remains personal
+     data under GDPR. The salt below sits in client-side code and is public.
+     It stops a hash from this hub matching the same address hashed
+     elsewhere. It is not a secret.
+
+     ID_HOMEPAGE forms part of the identifier. Changing it orphans every
+     existing progress record, so do not change it once real data exists.
+     ===================================================================== */
+  var ID_SALT = "cs-ondemand:ckai:v1:";
+  var ID_HOMEPAGE = "https://elsevierresources.com/clinicalkey-ai-pilot/cs-ondemand/";
+
+  function hashId(email){
+    var norm = String(email||"").trim().toLowerCase();
+    var c = window.crypto;
+    if(!c || !c.subtle || !c.subtle.digest || !window.TextEncoder){
+      /* Fail closed. Never fall back to sending the address in the clear. */
+      return Promise.reject(new Error("subtle-crypto-unavailable"));
+    }
+    return c.subtle.digest("SHA-256", new TextEncoder().encode(ID_SALT + norm))
+      .then(function(buf){
+        return Array.prototype.map.call(new Uint8Array(buf), function(b){
+          return ("00" + b.toString(16)).slice(-2);
+        }).join("");
+      });
+  }
+
+  function actor(){
+    return { objectType:"Agent",
+             account:{ homePage: ID_HOMEPAGE, name: state.uid || "anonymous" } };
+  }
+  function activity(p,n){ return { objectType:"Activity", id:ACT_BASE+p, definition:{name:{"en-US":n}} }; }
+  function slug(x){ return String(x).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,""); }
+  function key(st){ return slug(st.title); }
+  var badgeEl = document.getElementById("lrs-badge");
+  function setLrs(s){ state.lrsStatus=s; updateBadge(); }
+  function updateBadge(){
+    if(!badgeEl) return;
+    if(state.uid) badgeEl.style.display="inline-flex";
+    badgeEl.className="lrs-badge"+(state.lrsStatus!=="idle"?" "+state.lrsStatus:"");
+    badgeEl.querySelector(".lrs-status").textContent = state.lrsStatus==="live"?"LRS live":state.lrsStatus==="sending"?"Sending":state.lrsStatus==="error"?"LRS error":"LRS idle";
+    badgeEl.querySelector(".lrs-email").textContent = state.uid ? state.uid.slice(0,10) : "";
+    badgeEl.querySelector(".lrs-count").textContent = state.sent+" sent";
+  }
+  function xapi(v,o,result){
+    var stmt={actor:actor(),verb:v,object:o};
+    if(state.org) stmt.context={extensions:{"http://id.tincanapi.com/extension/organization":state.org}};
+    if(result) stmt.result=result;
+    setLrs("sending");
+    sendStatement(stmt).then(function(ok){ if(ok){state.sent++;setLrs("live");}else setLrs("error"); }).catch(function(){ setLrs("error"); });
+  }
+
+  /* ---- xAPI State API: progress lives in the LRS, not the browser ---- */
+  function stateUrl(role){
+    return LRS.endpoint+"activities/state?activityId="+encodeURIComponent(ACT_BASE+"path/"+role)+
+      "&agent="+encodeURIComponent(JSON.stringify(actor()))+"&stateId=progress";
+  }
+  function saveProgress(){
+    if(!state.role || !state.uid) return;
+    var payload={done:state.done, idx:state.idx,
+                 org:state.org, updated:new Date().toISOString()};
+    fetch(stateUrl(state.role),{method:"PUT",headers:{"Authorization":AUTH,"Content-Type":"application/json",
+      "X-Experience-API-Version":"1.0.3"},body:JSON.stringify(payload)}).catch(function(){});
+  }
+  function loadProgress(role,cb){
+    fetch(stateUrl(role),{method:"GET",headers:{"Authorization":AUTH,"X-Experience-API-Version":"1.0.3"}})
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(d){ cb(d); })
+      .catch(function(){ cb(null); });
+  }
+  function sendStatement(stmt){
+    return fetch(LRS.endpoint+"statements",{method:"POST",headers:{"Authorization":AUTH,"Content-Type":"application/json","X-Experience-API-Version":"1.0.3"},body:JSON.stringify(stmt)})
+      .then(function(r){return r.ok;}).catch(function(){
+        var p=new URLSearchParams(); p.set("method","POST"); p.set("Authorization",AUTH); p.set("X-Experience-API-Version","1.0.3"); p.set("Content-Type","application/json"); p.set("content",JSON.stringify(stmt));
+        return fetch(LRS.endpoint+"statements",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:p.toString()}).then(function(r2){return r2.ok;}).catch(function(){return false;});
+      });
+  }
+
+  /* ---- PDF.js paginated viewer ---- */
+  var pdfLib=null, pdfDoc=null, pdfPage=1, pdfTotal=0, pdfReqUrl=null, pdfTask=null;
+  var SS=3, MAXW=3000;
+  function ensurePdfLib(){
+    if(pdfLib) return Promise.resolve(pdfLib);
+    return new Promise(function(res,rej){
+      var s=document.createElement("script");
+      s.src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
+      s.onload=function(){ pdfLib=window.pdfjsLib; pdfLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"; res(pdfLib); };
+      s.onerror=rej; document.head.appendChild(s);
+    });
+  }
+  function setupPdf(url){
+    pdfReqUrl=url; pdfDoc=null; pdfPage=1; pdfTotal=0;
+    var cnt=document.getElementById("pdfcount"); if(cnt) cnt.textContent="Loading";
+    ensurePdfLib().then(function(lib){ return lib.getDocument(url).promise; }).then(function(doc){
+      if(pdfReqUrl!==url) return;
+      pdfDoc=doc; pdfTotal=doc.numPages;
+      pdfPage=(state.pdfPageWanted && state.pdfPageWanted<=pdfTotal) ? state.pdfPageWanted : 1;
+      state.pdfPageWanted=null; renderPdfPage();
+    }).catch(function(){
+      var stage=document.getElementById("pdfstage");
+      if(stage) stage.innerHTML='<div class="pdferr">This document could not be displayed inline here. <a href="'+url+'" target="_blank" rel="noopener">Open it in a new tab</a>.</div>';
+      var cnt=document.getElementById("pdfcount"); if(cnt) cnt.textContent="";
+    });
+  }
+  function renderPdfPage(){
+    if(!pdfDoc) return;
+    var canvas=document.getElementById("pdfcanvas"), stage=document.getElementById("pdfstage"), cnt=document.getElementById("pdfcount");
+    if(!canvas||!stage) return;
+    if(pdfTask){ try{ pdfTask.cancel(); }catch(e){} pdfTask=null; }
+    pdfDoc.getPage(pdfPage).then(function(page){
+      var avail=stage.clientWidth-20; if(avail<280) avail=280;
+      var base=page.getViewport({scale:1});
+      var cssScale=avail/base.width;
+      var rs=cssScale*SS;
+      if(base.width*rs>MAXW) rs=MAXW/base.width;
+      var vp=page.getViewport({scale:rs});
+      var ctx=canvas.getContext("2d");
+      canvas.width=Math.floor(vp.width); canvas.height=Math.floor(vp.height);
+      canvas.style.width=Math.floor(base.width*cssScale)+"px";
+      canvas.style.height=Math.floor(base.height*cssScale)+"px";
+      ctx.setTransform(1,0,0,1,0,0);
+      pdfTask=page.render({canvasContext:ctx, viewport:vp});
+      pdfTask.promise.then(function(){ pdfTask=null; }).catch(function(){});
+      if(cnt) cnt.textContent="Page "+pdfPage+" of "+pdfTotal;
+      var pv=document.getElementById("pdfprev"), nx=document.getElementById("pdfnext");
+      if(pv) pv.disabled=(pdfPage<=1); if(nx) nx.disabled=(pdfPage>=pdfTotal);
+    });
+  }
+
+  /* ---- Screens ---- */
+  function gateAside(){
+    return '<aside class="gate-about">'+
+      '<h2 class="gh">The Customer Success On-Demand Hub</h2>'+
+      '<p class="one">A guided way to get up and running, with the right materials for your role gathered in one place.</p>'+
+      '<p class="wl">What to expect</p><ul>'+
+      '<li>About 50 minutes to work through a path in full, with an estimate on every step</li>'+
+      '<li>Jump straight to a topic if you already know what you need</li>'+
+      '</ul>'+
+      '<section class="gate-why"><h2><em>Why</em> ClinicalKey AI</h2>'+
+      '<p>ClinicalKey AI is an acceleration layer; it speeds up the move from question to evidence while keeping every answer traceable to a source. Content is curated by subject matter experts from both Elsevier and non-Elsevier publications, and every response carries citations you can open and check.</p>'+
+      '</section></aside>';
+  }
+
+  function gate(){
+    return '<div class="wrap gate-wrap"><div class="gate-grid">'+gateAside()+'<div class="gate">'+
+      '<h1>Welcome</h1><div class="rule"></div>'+
+      '<p>Enter your email and organization to begin.</p>'+
+      '<div class="gate-form stack">'+
+      '<input id="gate-email" type="email" placeholder="Email address" aria-label="Email address" />'+
+      '<input id="gate-org" type="text" placeholder="Organization, written in full" aria-label="Organization, written in full" aria-describedby="org-hint" />'+
+      '<p class="field-hint" id="org-hint">Please write your organization out in full, with no abbreviations. University Medical School rather than UMS.</p>'+
+      '<button class="btn-primary" data-action="submit-email">Begin</button></div>'+
+      '<p id="gate-err" class="gate-err">Please enter a valid email address and your organization.</p>'+
+      '<p id="gate-cryptoerr" class="gate-err">This browser cannot secure your address, so nothing has been sent. Please use a current version of Chrome, Edge, Firefox or Safari.</p>'+
+      '<p id="gate-orgwarn" class="gate-warn">That looks like an abbreviation. Please write your organization out in full so we can tell institutions apart. If it really is the full name, select Begin again.</p>'+
+      '<div class="callout"><span class="cl">Please note</span>Your progress is saved against the email address you enter. Use the same address when you return and you can pick up where you left off. Where you have an institutional address, please use it. Your address is converted into a one-way code inside your browser before anything is sent, so the address itself is never stored.</div>'+
+    '</div></div></div>';
+  }
+  /* Back to front. Layer 3 is the one permitted orange rectangle.
+     Remove a line to drop a layer; the offsets are driven by index. */
+  var LAYERS = [
+    {src:"assets/layer-6-spectrum.jpg"},
+    {src:"assets/layer-5-progress.jpg"},
+    {src:"assets/layer-4-geometry.jpg"},
+    {orange:true},
+    {src:"assets/layer-2-anatomy.jpg"},
+    {src:"assets/layer-1-human.jpg"}
+  ];
+  function layerStack(){
+    return '<div class="layers" aria-hidden="true">'+
+      LAYERS.map(function(l,i){
+        return '<div class="lyr lyr-'+i+'">'+
+          (l.orange ? '<span class="orng"></span>'
+                    : '<img src="'+l.src+'" alt="" loading="lazy" />')+
+        '</div>';
+      }).join("")+'</div>';
+  }
+
+  function landing(){
+    return '<div class="wrap landing"><div class="ltop"><div class="lleft"><div class="hero">'+
+      '<p class="eyebrow">Customer Success · Your Digital Experience</p>'+
+      '<h1>Where do I <em>start</em></h1><div class="rule"></div>'+
+      '<p class="lede">Pick the path that fits your role, or the role you are training for, and we will take you step by step.</p></div>'+
+      '<div class="cards">'+
+        card("admin","I am an administrator","Setting up and deploying ClinicalKey AI for my institution.",["Plan and execute your launch","Support your clinicians","Optimize adoption"])+
+        card("user","I am a clinician","Using ClinicalKey AI in my own practice.",["Optimize your clinical queries","Earn CME and MOC credit","Access on mobile devices"])+
+      '</div></div>'+layerStack()+'</div></div>';
+  }
+  function card(role,title,who,b){
+    return '<div class="card"><h3>'+title+'</h3><p class="who">'+who+'</p><ul>'+b.map(function(x){return "<li>"+x+"</li>";}).join("")+'</ul>'+
+      '<button class="btn-primary go" data-action="choose-role" data-role="'+role+'">Start this path</button></div>';
+  }
+  function journey(){
+    var j=journeys[state.role], steps=j.steps, total=steps.length, s=steps[state.idx];
+
+    var dc=steps.filter(function(x){return state.done[key(x)];}).length, pct=Math.round((dc/total)*100);
+    var cSteps=contentSteps(steps), cTotal=cSteps.length, vc=viewedCount(steps);
+    var rail='<aside class="rail"><p class="rtitle">'+j.label+'</p><p class="rmeta">'+vc+' of '+cTotal+' viewed \u00b7 about '+pathMins(cSteps)+' minutes in total</p>'+
+      '<div class="bar"><span style="width:'+Math.round(vc/cTotal*100)+'%"></span></div><ul class="steps">'+
+      steps.map(function(x,i){ var cls=(i===state.idx?"active ":"")+(state.done[key(x)]?"done":"");
+        if(x.type==="wrapup"){
+          var ready=allViewed(steps);
+          var left=unviewed(steps), shown=left.slice(0,4), hidden=left.length-shown.length;
+          return '<li class="term '+(ready?"ready ":"islocked ")+cls+'" '+
+            (ready?'data-action="goto-step" data-idx="'+i+'"':'data-action="wrap-locked"')+
+            ' tabindex="0" role="button"'+(ready?'':' aria-disabled="true"')+'>'+
+            '<span class="mk">'+SQUARE+'</span><span class="stxt">'+x.title+
+            '<span class="smin">'+(ready?"Ready":"Not open yet")+'</span></span></li>'+
+            (ready?'':'<div class="railtip" id="railtip"><span class="rt">'+
+              (left.length===1?"One step left to view":left.length+" steps left to view")+'</span><ul>'+
+              shown.map(function(u){ return '<li>'+u.t+'</li>'; }).join("")+'</ul>'+
+              (hidden>0?'<p class="anyorder">and '+hidden+' more</p>':'')+
+              '<p class="anyorder">Any order is fine. Nothing here is graded.</p></div>');
+        }
+        return '<li class="'+cls+'" data-action="goto-step" data-idx="'+i+'" tabindex="0" role="button">'+
+          '<span class="mk">'+RING+'</span><span class="stxt">'+x.title+
+          (state.done[key(x)]
+            ? '<span class="smin"><span class="vchk">'+CHK+'Viewed</span></span>'
+            : (x.mins?'<span class="smin">about '+x.mins+' min</span>':''))+
+          '</span></li>'; }).join("")+
+      '</ul><button class="switch" data-action="restart">Switch path</button></aside>';
+
+    var isFirst=state.idx===0, isWrap=(s.type==="wrapup");
+    var lastContent=(state.idx===cTotal-1);
+
+    var tools = (s.embed && s.embed.kind==="pdf" && s.type!=="sources" && s.type!=="resources-clinician") ?
+      '<div class="doc-tools">'+
+      '<button class="dt primary" data-action="toggle-expand">'+(state.expanded?"Exit full size":"View full size")+'</button>'+
+      (s.guide?'<a class="dt" data-action="open-guide" data-guide="'+s.guide+'" href="'+s.guide+'" target="_blank" rel="noopener">Download this guide</a>':'')+
+      (s.guide?'<button class="dt share" data-action="share-guide" data-guide="'+s.guide+'">Share this guide with a colleague</button>':'')+
+      '</div>' : '';
+
+    /* Advance wording follows what the record can actually attest to. Viewing is
+       observable; understanding is not. */
+    var footBtn = "";
+    if(!isWrap){
+      var nextIsWrap = lastContent;
+      var verb = state.done[key(s)] ? "" : "Viewed, ";
+      var dest = nextIsWrap ? "wrap up" : "next step";
+      var lbl = verb ? verb+dest : dest.charAt(0).toUpperCase()+dest.slice(1);
+      footBtn = '<button class="btn-primary" data-action="next">'+lbl+'</button>';
+    }
+
+    var eyebrow = isWrap
+      ? '<p class="eyebrow">End of the '+j.label.toLowerCase()+'</p>'
+      : '<p class="eyebrow">Step '+(state.idx+1)+' of '+cTotal+'</p>';
+
+    var stage='<section class="stage">'+resumeBanner()+eyebrow+'<h2>'+s.title+'</h2>'+
+      (isWrap ? wrapUpScreen(j) :
+        metaRow(s)+ obligBlock()+
+        '<div class="section-body">'+(s.body||"")+'</div>'+ exqBlock(s) + tools +
+        (s.type==="resources"?resourcesScreen():s.type==="sources"?contentSourcesBody():s.type==="resources-clinician"?clinicianContactScreen():media(s))+ seeAlso(s))+
+      '<div class="stage-foot"><button class="btn-ghost" data-action="prev"'+(isFirst?" disabled":"")+'>Previous</button>'+
+      footBtn+
+      (isWrap?'<button class="btn-ghost" data-action="restart">Back to start</button>':'')+
+      '</div></section>';
+
+    return '<div class="jwrap"><div class="journey'+(state.expanded?" expanded":"")+'">'+rail+stage+finder(steps)+'</div></div>';
+  }
+
+  function wrapUpScreen(j){
+    return '<p class="wrapintro">That is the '+j.label.toLowerCase()+
+      ' covered. Nothing here was graded, and every step stays open if you want to go back to one. '+
+      'Before you go, here is what has changed recently.</p>'+
+      '<p class="asof">'+NEWS_ASOF+'</p>'+
+      NEWS.map(function(g){
+        return '<section class="newsgrp"><h4>'+g.t+'</h4>'+
+          g.i.map(function(n){
+            return '<div class="newsitem"><p class="nh">'+n.h+'</p><p class="nd">'+n.d+'</p></div>';
+          }).join("")+'</section>';
+      }).join("");
+  }
+
+  function clinicianContactScreen(){
+    return '<div class="resgrid">'+
+      '<div class="rescard"><h4>ClinicalKey AI Support Center</h4>'+
+      '<p>Guidance, tutorials and troubleshooting for using ClinicalKey AI day to day.</p>'+
+      '<a class="dt primary" href="'+SUPPORT_URL+'" data-action="open-resource" data-res="'+SUPPORT_URL+'" data-restitle="Support Center" target="_blank" rel="noopener">Open the Support Center \u2197</a></div>'+
+      '<div class="rescard"><h4>Talk to someone</h4>'+
+      '<p>Request time with the team that supports your account.</p>'+
+      '<a class="dt primary" href="'+CALL_URL+'" data-action="open-resource" data-res="'+CALL_URL+'" data-restitle="Schedule a call" target="_blank" rel="noopener">Schedule a call \u2197</a></div>'+
+      '</div>';
+  }
+
+  function resourcesScreen(){
+    var cards =
+      '<div class="rescard"><h4>ClinicalKey AI Support Center</h4>'+
+      '<p>A resource hub that helps healthcare professionals use AI tools within ClinicalKey, offering guidance, tutorials and troubleshooting to improve clinical decision-making and patient care.</p>'+
+      '<p class="rsub">Browse by Orders and renewals, Access, Onboarding, Training, Using the product, or Content. The top answers cover single sign-on contacts, supported devices, claiming CME and MOC, and how ClinicalKey AI manages hallucinations.</p>'+
+      '<a class="dt primary" href="'+SUPPORT_URL+'" data-action="open-resource" data-res="'+SUPPORT_URL+'" data-restitle="Support Center" target="_blank" rel="noopener">Open the Support Center \u2197</a></div>'+
+
+      '<div class="rescard"><h4>Talk to someone</h4>'+
+      '<p>If you would rather work through something with a person, you can request time with the team that supports your account.</p>'+
+      '<a class="dt primary" href="'+CALL_URL+'" data-action="open-resource" data-res="'+CALL_URL+'" data-restitle="Schedule a call" target="_blank" rel="noopener">Schedule a call \u2197</a></div>'+
+
+      '<div class="rescard wide"><h4>Driving adoption at your organization</h4>'+
+      '<p>Time-pressed clinicians do not always discover what ClinicalKey AI can do on their own. This kit gives you ready messaging, a short feature overview, and promotional assets, including flyers, email templates, and banner ads, so you can raise awareness across your organization and steer people away from unsanctioned generic AI tools.</p>'+
+      (ADOPTION_KIT_URL
+        ? '<a class="dt primary" href="'+ADOPTION_KIT_URL+'" data-action="open-resource" data-res="'+ADOPTION_KIT_URL+'" data-restitle="Adoption kit" target="_blank" rel="noopener">Open the adoption kit \u2197</a>'
+        : '<div class="pending"><span class="pl">Awaiting</span><span class="pv">Adoption kit link</span><span class="pl">Sourcing</span><span class="pv">John Grooms</span></div>')+
+      '</div>';
+
+    function linkList(label, arr){
+      return '<div class="reslist"><p class="rlabel">'+label+'</p><ul>'+
+        arr.map(function(r){
+          return '<li><a href="'+r.u+'" data-action="open-resource" data-res="'+r.u+'" data-restitle="'+r.t+'" target="_blank" rel="noopener">'+r.t+' <span class="ext" aria-label="opens in a new tab">\u2197</span></a>'+
+            '<span class="sad">'+r.d+'</span></li>';
+        }).join("")+'</ul></div>';
+    }
+
+    return '<div class="resgrid">'+cards+'</div>'+
+      linkList("Where the content comes from", SOURCES)+
+      '<div style="height:18px"></div>'+
+      linkList("Further reading", RES);
+  }
+
+  function seeAlso(st){
+    if(!st.also || !st.also.length) return "";
+    return '<aside class="seealso"><p class="salabel">See also</p><ul>'+
+      st.also.map(function(r){
+        var ext = r.u.indexOf("http")===0;
+        return '<li><a href="'+r.u+'" data-action="open-resource" data-res="'+r.u+'" data-restitle="'+r.t+'" target="_blank" rel="noopener">'+r.t+
+          (ext?' <span class="ext" aria-label="opens an external site">\u2197</span>':'')+'</a>'+
+          '<span class="sad">'+r.d+'</span></li>';
+      }).join("")+'</ul></aside>';
+  }
+
+  function resumeBanner(){
+    if(!state.resumeOffer) return "";
+    var n=Object.keys(state.resumeOffer.done||{}).length;
+    return '<div class="resume"><span class="rtxt">You have saved progress on this path, with '+n+' step'+(n===1?"":"s")+' marked done. Pick up where you left off?</span>'+
+      '<button class="ra" data-action="resume-yes">Resume</button>'+
+      '<button class="rb" data-action="resume-no">Start over</button></div>';
+  }
+
+
+  function media(s){
+    if(s.embed && s.embed.kind==="vimeo"){
+      return '<div class="embed video"><div class="vwrap"><iframe src="'+s.embed.src+'" title="'+s.title+'" frameborder="0" '+
+        'allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" allowfullscreen '+
+        'referrerpolicy="strict-origin-when-cross-origin"></iframe></div></div>';
+    }
+    if(s.embed && s.embed.kind==="pdf"){
+      return '<div class="embed pdf"><div class="pdfbar">'+
+        '<button id="pdfprev" data-action="pdf-prev">Previous</button>'+
+        '<span class="pdfcount" id="pdfcount">Loading</span>'+
+        '<button id="pdfnext" data-action="pdf-next">Next</button></div>'+
+        '<div class="pdfstage" id="pdfstage"><canvas id="pdfcanvas"></canvas></div></div>';
+    }
+    return '<div class="embed" style="border-style:dashed;background:var(--sand)"><div style="padding:40px 34px;min-height:180px;display:flex;flex-direction:column;gap:8px;justify-content:center">'+
+      '<span style="font-size:12.5px;color:var(--ink)">Embedded resource</span>'+
+      '<span class="serif" style="font-size:22px">'+s.title+'</span>'+
+      '<span style="font-size:13.5px;color:var(--ink)">Live asset renders here once its link is added.</span></div></div>';
+  }
+  function finder(steps){
+    var order=["Get oriented","Ask better questions","Deploy and configure","Know the product","Use it day to day","Continuing education","Keep going"], groups={};
+    steps.forEach(function(s,i){ (groups[s.cat]=groups[s.cat]||[]).push({s:s,i:i}); });
+    var body=order.filter(function(c){return groups[c];}).map(function(c){
+      var chips=groups[c].map(function(o){ return '<button class="chip'+(o.i===state.idx?" active":"")+'" data-action="goto-step" data-idx="'+o.i+'">'+o.s.concern+'</button>'; }).join("");
+      return '<div class="cgroup"><span class="clabel">'+c+'</span><div class="chips">'+chips+'</div></div>';
+    }).join("");
+    return '<div class="finder'+(state.indexOpen?" open":"")+'"><button class="finder-head" data-action="toggle-index" aria-expanded="'+(state.indexOpen?"true":"false")+'">'+
+      '<span class="fh-txt"><span class="fh-title">Looking for something specific?</span><span class="fh-sub">Jump straight to a topic and land on the right step</span></span>'+
+      '<span class="chev">'+(state.indexOpen?"\u25be":"\u25b8")+'</span></button><div class="finder-body">'+body+'</div></div>';
+  }
+  function done(){
+    var j=journeys[state.role];
+    return '<div class="wrap"><div class="done-wrap"><div class="check">\u2713</div>'+
+      '<h2>You have completed the '+j.label.toLowerCase()+'</h2>'+
+      '<p>That is the core of getting going with ClinicalKey AI. Here is where to go from here.</p>'+
+      '<div class="next-cards"><div class="nc"><p class="h">Keep exploring</p><p class="d">Revisit any step from the path whenever you need a refresher.</p></div>'+
+      '<div class="nc"><p class="h">Hit a snag?</p><p class="d">The Support Center handles account, access, and troubleshooting questions.</p></div></div>'+
+      '<button class="switch" data-action="restart">Back to start</button></div></div>';
+  }
+
+  /* ---- Draft 0.9 helpers ---- */
+
+  var RING = '<svg class="dotsvg" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">'+
+             '<circle class="ring" cx="8" cy="8" r="6"/></svg>';
+  var SQUARE = '<svg class="dotsvg" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">'+
+             '<rect x="2.5" y="2.5" width="11" height="11" rx="2.5"/></svg>';
+  var CHK = '<svg width="11" height="11" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">'+
+            '<path d="M1.5 6.5 L4.5 9.5 L10.5 2.5" fill="none" stroke="#544946" stroke-width="2" '+
+            'stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  /* Why ClinicalKey AI. Sits below the path cards, because the action on the landing
+     page is choosing a path; the value case supports that choice rather than blocking it. */
+
+  /* Professional obligation. Step one of the clinical paths only. */
+  function obligBlock(){
+    if(state.idx!==0) return "";
+    var o = OBLIGATION[state.role];
+    if(!o) return "";
+    return '<div class="oblig"><span class="ol">Why this matters</span>'+o+'</div>';
+  }
+
+  /* Example queries. Shown above the embedded guide on the steps that teach asking. */
+  function exqBlock(st){
+    if(!st.exq) return "";
+    var e = EXQ[state.role];
+    if(!e) return "";
+    var body = "";
+    if(state.exqOpen){
+      body = '<div class="exq-body">'+e.items.map(function(it){
+        return '<div class="exq-item"><p class="exq-lab">'+it.lab+'</p>'+
+          '<p class="exq-case">'+it.c+'</p><p class="exq-q">'+it.q+'</p></div>';
+      }).join("")+
+      '<p class="exq-foot">'+e.foot+' '+
+      '<a href="'+CKAI_HOME+'" data-action="open-resource" data-res="'+CKAI_HOME+'" '+
+      'data-restitle="ClinicalKey AI home" target="_blank" rel="noopener">Open ClinicalKey AI \u2197</a></p></div>';
+    }
+    return '<div class="exq"><button class="exq-head" data-action="toggle-exq" '+
+      'aria-expanded="'+(state.exqOpen?"true":"false")+'"><span>'+e.label+'</span>'+
+      '<span class="chev">'+(state.exqOpen?"\u2212":"+")+'</span></button>'+body+'</div>';
+  }
+
+  /* Time estimate covers the walkthrough on this page plus the guide it embeds. */
+  function pathMins(steps){
+    return steps.reduce(function(a,x){ return a + (x.mins||0); }, 0);
+  }
+  function metaRow(st){
+    if(!st.mins) return "";
+    return '<div class="metarow"><span class="tmeta"><span class="td"></span>About '+
+      st.mins+' minutes, including the guide</span></div>';
+  }
+
+  /* Share links are composed from SHARE_BASE, since script inside the iframe cannot read
+     the parent URL. Inbound routing reads the fragment on this document, which works when
+     the hub is opened directly. For it to work through the WordPress embed the parent page
+     has to forward its fragment to the iframe src. Karen Cima-Thornhill owns that change. */
+  function copyText(t){
+    try{ if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(t); return true; } }catch(e){}
+    try{
+      var ta=document.createElement("textarea"); ta.value=t; ta.setAttribute("readonly","");
+      ta.style.position="absolute"; ta.style.left="-9999px";
+      document.body.appendChild(ta); ta.select(); document.execCommand("copy");
+      document.body.removeChild(ta); return true;
+    }catch(e2){ return false; }
+  }
+  function readDeep(){
+    var h=(window.location.hash||"").replace(/^#/,"");
+    if(!h || h.indexOf("/")<0) return null;
+    var p=h.split("/"), r=p[0], sl=p[1];
+    if(!journeys[r]) return null;
+    var found=-1;
+    journeys[r].steps.forEach(function(x,i){ if(key(x)===sl) found=i; });
+    return found<0 ? null : {role:r, idx:found};
+  }
+
+  /* Everything that used to run inline at the gate, reached once the address
+     has been converted. */
+  function afterGate(){
+    xapi(VERBS.initialized, activity("hub","Onboarding and Enablement Hub"));
+    if(state.deep && journeys[state.deep.role]){
+      var dr=state.deep.role, di=state.deep.idx; state.deep=null;
+      state.role=dr; state.idx=di; state.screen="journey";
+      xapi(VERBS.selected, activity("path/"+dr, journeys[dr].label));
+      var ds2=journeys[dr].steps[di];
+      xapi(VERBS.experienced, activity("path/"+dr+"/step/"+key(ds2), ds2.title));
+      render();
+      /* Merge saved progress but hold the requested step, since a shared link
+         is a request for one page rather than an offer to resume. */
+      loadProgress(dr, function(d){
+        if(!d || state.role!==dr || state.screen!=="journey") return;
+        state.done=d.done||{};
+        render();
+      });
+      return;
+    }
+    state.screen="landing"; render();
+  }
+
+  function render(){
+    document.body.setAttribute("data-screen", state.screen);
+    if(state.role) roleChip.textContent = journeys[state.role].label;
+    if(state.screen==="gate") app.innerHTML=gate();
+    else if(state.screen==="landing") app.innerHTML=landing();
+    else if(state.screen==="journey") app.innerHTML=journey();
+    else app.innerHTML=done();
+    updateBadge();
+    if(state.screen==="journey"){
+      var cs=journeys[state.role].steps[state.idx];
+      if(cs.embed && cs.embed.kind==="pdf") setupPdf(cs.embed.src);
+    }
+    window.scrollTo({top:0,behavior:"auto"});
+  }
+
+  function handle(action, el){
+    if(action==="submit-email"){
+      var i=document.getElementById("gate-email"), v=i?i.value.trim():"", at=v.indexOf("@"), dot=v.lastIndexOf(".");
+      var o=document.getElementById("gate-org"), ov=o?o.value.trim():"";
+      var errEl=document.getElementById("gate-err"), warnEl=document.getElementById("gate-orgwarn");
+      if(!(at>0 && dot>at+1 && dot<v.length-1) || ov.length<2){ if(errEl) errEl.classList.add("show"); return; }
+      if(errEl) errEl.classList.remove("show");
+      var looksAbbrev = ov.length<=6 && ov.indexOf(" ")===-1 && ov===ov.toUpperCase() && /[A-Z]/.test(ov);
+      if(looksAbbrev && state.orgWarned!==ov){ state.orgWarned=ov; if(warnEl) warnEl.classList.add("show"); return; }
+      var cryptoEl=document.getElementById("gate-cryptoerr");
+      if(cryptoEl) cryptoEl.classList.remove("show");
+      state.org=ov;
+      /* Convert the address before anything is sent. If the browser cannot do
+         it, stop rather than fall back to sending it in the clear. */
+      hashId(v).then(function(uid){ state.uid=uid; v=null; afterGate(); })
+               .catch(function(){ if(cryptoEl) cryptoEl.classList.add("show"); });
+      return;
+    }
+    if(action==="choose-role"){
+      state.role=el.getAttribute("data-role"); state.idx=0; state.done={};
+      state.expanded=false; state.resumeOffer=null; state.screen="journey";
+      xapi(VERBS.selected, activity("path/"+state.role, journeys[state.role].label));
+      render();
+      var want=state.role;
+      loadProgress(want, function(d){
+        if(!d || state.role!==want || state.screen!=="journey") return;
+        if(d.done && Object.keys(d.done).length){ state.resumeOffer=d; render(); }
+      });
+      return;
+    }
+    if(action==="resume-yes"){
+      var rd=state.resumeOffer||{}, rsteps=journeys[state.role].steps;
+      state.done=rd.done||{};
+      var want=Math.min(typeof rd.idx==="number"?rd.idx:0, rsteps.length-1);
+      /* Never resume onto a wrap up that is not open yet. */
+      if(rsteps[want] && rsteps[want].type==="wrapup" && !allViewed(rsteps)){
+        want=(unviewed(rsteps)[0]||{i:0}).i;
+      }
+      state.idx=want;
+      state.resumeOffer=null; render(); return;
+    }
+    if(action==="resume-no"){ state.resumeOffer=null; saveProgress(); render(); return; }
+    if(action==="goto-step"){ state.idx=parseInt(el.getAttribute("data-idx"),10); state.expanded=false;
+      var gs=journeys[state.role].steps[state.idx]; xapi(VERBS.experienced, activity("path/"+state.role+"/step/"+key(gs), gs.title)); render(); return; }
+    if(action==="toggle-expand"){ state.expanded=!state.expanded; state.pdfPageWanted=pdfPage; render(); return; }
+    if(action==="toggle-acc"){ var ai=parseInt(el.getAttribute("data-idx"),10); state.accOpen[ai]=!state.accOpen[ai]; render(); return; }
+    if(action==="next"){
+      var steps=journeys[state.role].steps, d=steps[state.idx];
+      if(!state.done[key(d)]){
+        state.done[key(d)]=true;
+        xapi(VERBS.completed, activity("path/"+state.role+"/step/"+key(d), d.title));
+      }
+      var cT=contentSteps(steps).length;
+      if(state.idx < cT-1){ state.idx++; }
+      else if(allViewed(steps)){
+        /* Wrap up is the last entry in the array. */
+        state.idx = steps.length-1;
+        xapi(VERBS.completed, activity("path/"+state.role, journeys[state.role].label));
+      } else {
+        /* Steps were taken out of order, so send them to the first one still unseen
+           rather than to a wrap up that is not open. */
+        state.idx = unviewed(steps)[0].i;
+      }
+      state.expanded=false; saveProgress(); render(); return;
+    }
+    if(action==="wrap-locked"){
+      var rt=document.getElementById("railtip");
+      if(rt) rt.classList.toggle("show");
+      return;
+    }
+    if(action==="prev"){ if(state.idx>0){ state.idx--; state.expanded=false; render(); } return; }
+    if(action==="restart"){ state.screen="landing"; state.role=null; state.idx=0; state.done={};
+      state.expanded=false; state.resumeOffer=null; render(); return; }
+    if(action==="toggle-index"){ state.indexOpen=!state.indexOpen; render(); return; }
+    if(action==="pdf-prev"){ if(pdfDoc && pdfPage>1){ pdfPage--; renderPdfPage(); } return; }
+    if(action==="pdf-next"){ if(pdfDoc && pdfPage<pdfTotal){ pdfPage++; renderPdfPage(); } return; }
+    if(action==="open-resource"){
+      var ru=el.getAttribute("data-res"), rt=el.getAttribute("data-restitle")||"";
+      xapi(VERBS.experienced, activity("resource/"+slug(rt), "See also: "+rt));
+      window.open(ru,"_blank","noopener"); return;
+    }
+    if(action==="open-guide"){
+      var url=el.getAttribute("data-guide"), ds=journeys[state.role]?journeys[state.role].steps[state.idx]:null;
+      xapi(VERBS.downloaded, activity("guide/"+(ds?slug(ds.title):"item"), "Guide: "+(ds?ds.title:"")));
+      window.open(url,"_blank","noopener"); return;
+    }
+  }
+
+  if(!TESTING){
+    var tb=document.getElementById("testbar"); if(tb) tb.style.display="none";
+    var lb=document.getElementById("lrs-badge"); if(lb) lb.style.display="none";
+    document.body.setAttribute("data-testing","off");
+  }
+
+  document.addEventListener("click", function(e){ var el=e.target.closest("[data-action]"); if(!el) return;
+    if(!(el.tagName==="INPUT" && el.type==="radio")) e.preventDefault();
+    handle(el.getAttribute("data-action"), el); });
+  document.addEventListener("keydown", function(e){ if((e.key==="Enter"||e.key===" ") && e.target.matches('.steps li[data-action]')){ e.preventDefault(); handle("goto-step", e.target); } });
+  var rz; window.addEventListener("resize", function(){ clearTimeout(rz); rz=setTimeout(function(){ if(pdfDoc && state.screen==="journey"){ var cs=journeys[state.role].steps[state.idx]; if(cs.embed&&cs.embed.kind==="pdf") renderPdfPage(); } },150); });
+
+  state.deep = readDeep();
+  render();
+})();
+</script>
+</body>
+</html>
