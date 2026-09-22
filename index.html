@@ -424,7 +424,7 @@
     </div>
   </header>
   <main id="app"></main>
-  <footer class="vstamp"><div class="vinner">Draft 0.11 · 17 September 2026 · Internal review copy, not for customer distribution</div></footer>
+  <footer class="vstamp"><div class="vinner">Draft 0.11.1 · 17 September 2026 · Internal review copy, not for customer distribution</div></footer>
 
 <script>
 (function(){
@@ -838,9 +838,9 @@
      not secrecy. Treat any credential placed here as public.
      ===================================================================== */
   var LRS = {
-    endpoint: "https://cloud.scorm.com/lrs/O3BIJIXPN6/sandbox/",
-    key:      "TaToh28aeKRXaJXlc1I",
-    secret:   "TYe_QqSfxQ7FSzN8no8"
+    endpoint: "PASTE_ENDPOINT_HERE",
+    key:      "PASTE_KEY_HERE",
+    secret:   "PASTE_SECRET_HERE"
   };
   var AUTH = "Basic " + btoa(LRS.key + ":" + LRS.secret);
   var ACT_BASE = "https://elsevier-health.github.io/REPO-NAME/";
@@ -1003,8 +1003,9 @@
       '<h2 class="gh">The Customer Success On-Demand Hub</h2>'+
       '<p class="one">A guided way to get up and running, with the right materials for your role gathered in one place.</p>'+
       '<p class="wl">What to expect</p><ul>'+
-      '<li>About 50 minutes to work through a path in full, with an estimate on every step</li>'+
-      '<li>Jump straight to a topic if you already know what you need</li>'+
+      '<li>On-demand resources, there whenever you need them</li>'+
+      '<li>Guided learning, sequenced for your role</li>'+
+      '<li>Supported information, with a route to a person if you need one</li>'+
       '</ul>'+
       '<section class="gate-why"><h2><em>Why</em> ClinicalKey AI</h2>'+
       '<p>ClinicalKey AI is an acceleration layer; it speeds up the move from question to evidence while keeping every answer traceable to a source. Content is curated by subject matter experts from both Elsevier and non-Elsevier publications, and every response carries citations you can open and check.</p>'+
@@ -1086,7 +1087,7 @@
           '<span class="mk">'+RING+'</span><span class="stxt">'+x.title+
           (state.done[key(x)]
             ? '<span class="smin"><span class="vchk">'+CHK+'Viewed</span></span>'
-            : (x.mins?'<span class="smin">about '+x.mins+' min</span>':''))+
+            : (x.mins?'<span class="smin">'+timeLabel(x, true)+'</span>':''))+
           '</span></li>'; }).join("")+
       '</ul><button class="switch" data-action="restart">Switch path</button></aside>';
 
@@ -1288,10 +1289,17 @@
   function pathMins(steps){
     return steps.reduce(function(a,x){ return a + (x.mins||0); }, 0);
   }
+  /* A video is watched, a guide is read. The estimate should say which. */
+  function timeLabel(st, brief){
+    if(!st.mins) return "";
+    if(st.type==="video") return st.mins+" min to watch";
+    return brief ? "about "+st.mins+" min"
+                 : "About "+st.mins+" minutes, including the guide";
+  }
   function metaRow(st){
     if(!st.mins) return "";
-    return '<div class="metarow"><span class="tmeta"><span class="td"></span>About '+
-      st.mins+' minutes, including the guide</span></div>';
+    return '<div class="metarow"><span class="tmeta"><span class="td"></span>'+
+      timeLabel(st, false)+'</span></div>';
   }
 
   /* Share links are composed from SHARE_BASE, since script inside the iframe cannot read
