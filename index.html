@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!-- Review copy is not indexed. Whether production should be is an open decision. -->
+<meta name="robots" content="noindex, nofollow" />
 <title>Onboarding and Enablement Hub</title>
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
 <link rel="alternate icon" href="assets/favicon.png" />
@@ -121,8 +123,12 @@
   .pending .pl{color:var(--ink); font-weight:700; white-space:nowrap;}
   .pending .pv{color:var(--graphite);}
 
+  /* Credit line. Kept separate from the version stamp so it stays in production. */
+  .credit{border-top:1px solid var(--ivory); background:var(--white);}
+  .credit .cinner{max-width:1560px; margin:0 auto; padding:16px 30px 0; font-size:12.5px; color:var(--ink); letter-spacing:-0.02em;}
+
   /* Version stamp */
-  .vstamp{border-top:1px solid var(--ivory); background:var(--white);}
+  .vstamp{background:var(--white);}
   .vstamp .vinner{max-width:1560px; margin:0 auto; padding:18px 30px; font-size:12px; color:var(--ink);}
 
   /* Embeds */
@@ -370,6 +376,10 @@
   .newsitem:last-child{margin-bottom:0;}
   .newsitem .nh{font-family:var(--sans); font-weight:700; font-size:15px; margin:0 0 4px; color:var(--graphite);}
   .newsitem .nd{font-size:14.5px; color:var(--ink); margin:0; line-height:1.55; max-width:70ch;}
+  .newsitem .nl{margin:7px 0 0;}
+  .newsitem .nl a{font-size:14px; font-weight:700; color:var(--blue); text-decoration:none;}
+  .newsitem .nl a:hover{text-decoration:underline;}
+  .newsitem .nl a:focus-visible{outline:2px solid var(--blue); outline-offset:2px; border-radius:3px;}
 
   /* ---- gate, two blocks on the left ---- */
   .gate-about h2.gh{font-size:40px; line-height:1.08; margin:0 0 16px; max-width:22ch;}
@@ -424,7 +434,8 @@
     </div>
   </header>
   <main id="app"></main>
-  <footer class="vstamp"><div class="vinner">Draft 0.11.1 · 17 September 2026 · Internal review copy, not for customer distribution</div></footer>
+  <footer class="credit"><div class="cinner">Made by the Clinical Solutions Training and Development team</div></footer>
+  <footer class="vstamp"><div class="vinner">Draft 0.13 · 20 October 2026 · Internal review copy, not for customer distribution</div></footer>
 
 <script>
 (function(){
@@ -473,7 +484,7 @@
      Used to build shareable per-step links. The hub itself runs inside an iframe on this
      page, so script here cannot read or write the parent URL. The link is therefore
      composed from this constant rather than read from location. */
-  var SHARE_BASE = "https://elsevierresources.com/clinicalkey-ai-pilot/cs-ondemand/";
+  var SHARE_BASE = "https://elsevierresources.com/csondemand/ckai/";
 
   /* Product home. Sourced from the ClinicalKey AI user guide, access section. */
   var CKAI_HOME = "https://www.clinicalkey.com/ai";
@@ -522,6 +533,7 @@
 
 
   var CALL_URL    = "https://elsevierresources.com/customer-support/";
+  var ACADEMY_URL = "https://www.elsevier.com/promotions/gen-ai-academy-for-health";
 
   /* Adoption kit, requested by John 19 August. Lives on Resource Center;
      exact URL still to come from him. Rendered as its own boxed section on
@@ -740,7 +752,8 @@
          d:"The reports page on the Resource Center now has search, filters by audience and by edition or market, downloads by content type, a choice of TXT or Excel, and a clearer layout."}]},
     {t:"Learning and research",
      i:[{h:"Gen AI Academy for Health",
-         d:"A free, self-paced course on using generative AI responsibly in practice, designated for up to 1.5 AMA PRA Category 1 Credits, with subtitles in English, French, German, Portuguese, Spanish and Turkish."},
+         d:"A free, self-paced course on using generative AI responsibly in practice, designated for up to 1.5 AMA PRA Category 1 Credits, with subtitles in English, French, German, Portuguese, Spanish and Turkish.",
+         u:ACADEMY_URL, ut:"Enroll in the Academy"},
         {h:"Monthly ClinicalKey training sessions",
          d:"Live sessions in six languages across a range of times, each one recorded if the timing does not work."},
         {h:"Clinician of the Future 2026",
@@ -750,10 +763,9 @@
   var bodyIntro = '<p>A short overview of what ClinicalKey AI is, how it fits into clinical workflow, and what makes its answers different from a general purpose AI tool.</p>';
 
   var OWNER_SC = "Support Center";
-  function pending(t,o){
+  function pending(t){
     return '<p>The walkthrough for this section is written and ready. It is waiting on its source asset before the key actions and the embedded guide can be added.</p>'+
-      '<div class="pending"><span class="pl">Awaiting</span><span class="pv">'+t+'</span>'+
-      '<span class="pl">Sourcing</span><span class="pv">'+o+'</span></div>';
+      '<div class="pending"><span class="pl">Awaiting</span><span class="pv">'+t+'</span></div>';
   }
 
   /* The video sits on the clinician path only. An administrator is deploying the
@@ -775,7 +787,8 @@
     {title:"User Guide", type:"doc", cat:"Use it day to day", concern:"Everyday tasks, step by step", mins:13,
      embed:{kind:"pdf", src:DOC.user}, guide:SHARE.user, body:bodyUser},
     {title:"Earn CME & Redeem MOC Credit", type:"doc", cat:"Continuing education", concern:"Earn CME / redeem MOC credit", mins:6,
-     embed:{kind:"pdf", src:GUIDE_CME}, guide:GUIDE_CME, body:bodyCme},
+     embed:{kind:"pdf", src:GUIDE_CME}, guide:GUIDE_CME, body:bodyCme,
+     also:[{u:ACADEMY_URL, t:"Gen AI Academy for Health", d:"A free, self-paced course on using generative AI responsibly in practice. Designated for up to 1.5 AMA PRA Category 1 Credits."}]},
     {title:"App Guide", type:"doc", cat:"Use it day to day", concern:"Use it on mobile", mins:5,
      embed:{kind:"pdf", src:DOC.app}, guide:GUIDE_APP, body:bodyApp},
     {title:"Content Sources", type:"sources", cat:"Keep going", concern:"What does ClinicalKey AI draw on?", mins:4,
@@ -786,6 +799,10 @@
   var adminSteps = [
     {title:"User Guide", type:"doc", cat:"Know the product", concern:"See what my users see", mins:13,
      embed:{kind:"pdf", src:DOC.user}, guide:SHARE.user, body:bodyUser},
+    /* Same content as the clinician step. Placed with the product knowledge, since an
+       administrator needs it to answer coverage questions before rollout. */
+    {title:"Content Sources", type:"sources", cat:"Know the product", concern:"Where do the answers come from?", mins:4,
+     body:null},
     {title:"Implementation Toolkit", type:"doc", cat:"Deploy and configure", concern:"Plan our rollout", mins:9,
      embed:{kind:"pdf", src:DOC.impl}, guide:SHARE.impl, body:bodyImpl},
     {title:"SAML SSO Guide", type:"doc", cat:"Deploy and configure", concern:"Configure single sign-on (SSO)", mins:5,
@@ -1137,7 +1154,9 @@
       NEWS.map(function(g){
         return '<section class="newsgrp"><h4>'+g.t+'</h4>'+
           g.i.map(function(n){
-            return '<div class="newsitem"><p class="nh">'+n.h+'</p><p class="nd">'+n.d+'</p></div>';
+            return '<div class="newsitem"><p class="nh">'+n.h+'</p><p class="nd">'+n.d+'</p>'+
+              (n.u ? '<p class="nl"><a href="'+n.u+'" data-action="open-resource" data-res="'+n.u+'" data-restitle="'+n.h+'" target="_blank" rel="noopener">'+n.ut+' <span class="ext" aria-label="opens an external site">\u2197</span></a></p>' : '')+
+              '</div>';
           }).join("")+'</section>';
       }).join("");
   }
@@ -1168,7 +1187,7 @@
       '<p>Time-pressed clinicians do not always discover what ClinicalKey AI can do on their own. This kit gives you ready messaging, a short feature overview, and promotional assets, including flyers, email templates, and banner ads, so you can raise awareness across your organization and steer people away from unsanctioned generic AI tools.</p>'+
       (ADOPTION_KIT_URL
         ? '<a class="dt primary" href="'+ADOPTION_KIT_URL+'" data-action="open-resource" data-res="'+ADOPTION_KIT_URL+'" data-restitle="Adoption kit" target="_blank" rel="noopener">Open the adoption kit \u2197</a>'
-        : '<div class="pending"><span class="pl">Awaiting</span><span class="pv">Adoption kit link</span><span class="pl">Sourcing</span><span class="pv">John Grooms</span></div>')+
+        : '<div class="pending"><span class="pl">Awaiting</span><span class="pv">Adoption kit link</span></div>')+
       '</div>';
 
     function linkList(label, arr){
@@ -1306,6 +1325,18 @@
      the parent URL. Inbound routing reads the fragment on this document, which works when
      the hub is opened directly. For it to work through the WordPress embed the parent page
      has to forward its fragment to the iframe src. Karen Cima-Thornhill owns that change. */
+  function track(verb, path, name){
+    if(!state.uid) return;
+    xapi(verb, activity(path, name));
+  }
+  function copyLink(url, el){
+    var ok = copyText(url);
+    if(!el) return;
+    var old = el.getAttribute("data-label") || el.textContent;
+    el.setAttribute("data-label", old);
+    el.textContent = ok ? "Link copied" : "Copy failed";
+    setTimeout(function(){ if(el) el.textContent = old; }, 1800);
+  }
   function copyText(t){
     try{ if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(t); return true; } }catch(e){}
     try{
@@ -1408,7 +1439,20 @@
     if(action==="goto-step"){ state.idx=parseInt(el.getAttribute("data-idx"),10); state.expanded=false;
       var gs=journeys[state.role].steps[state.idx]; xapi(VERBS.experienced, activity("path/"+state.role+"/step/"+key(gs), gs.title)); render(); return; }
     if(action==="toggle-expand"){ state.expanded=!state.expanded; state.pdfPageWanted=pdfPage; render(); return; }
-    if(action==="toggle-acc"){ var ai=parseInt(el.getAttribute("data-idx"),10); state.accOpen[ai]=!state.accOpen[ai]; render(); return; }
+    if(action==="toggle-acc"){ var ai=parseInt(el.getAttribute("data-idx"),10); state.accOpen[ai]=!state.accOpen[ai];
+      if(state.accOpen[ai] && SOURCE_CATS[ai]) track(VERBS.experienced, "sources/"+slug(SOURCE_CATS[ai].t), "Content sources: "+SOURCE_CATS[ai].t);
+      render(); return; }
+    if(action==="toggle-exq"){ state.exqOpen=!state.exqOpen;
+      if(state.exqOpen) track(VERBS.experienced, "examples/"+state.role, "Example queries, "+state.role+" path");
+      render(); return; }
+    if(action==="share-hub"){ copyLink(SHARE_BASE, el);
+      track(VERBS.shared, "hub", "Shared the hub"); return; }
+    if(action==="share-guide"){
+      var sst=journeys[state.role]?journeys[state.role].steps[state.idx]:null;
+      var surl=SHARE_BASE+(sst?"#"+state.role+"/"+key(sst):"");
+      copyLink(surl, el);
+      track(VERBS.shared, "path/"+state.role+"/step/"+(sst?key(sst):"item"), "Shared: "+(sst?sst.title:""));
+      return; }
     if(action==="next"){
       var steps=journeys[state.role].steps, d=steps[state.idx];
       if(!state.done[key(d)]){
@@ -1436,7 +1480,9 @@
     if(action==="prev"){ if(state.idx>0){ state.idx--; state.expanded=false; render(); } return; }
     if(action==="restart"){ state.screen="landing"; state.role=null; state.idx=0; state.done={};
       state.expanded=false; state.resumeOffer=null; render(); return; }
-    if(action==="toggle-index"){ state.indexOpen=!state.indexOpen; render(); return; }
+    if(action==="toggle-index"){ state.indexOpen=!state.indexOpen;
+      if(state.indexOpen) track(VERBS.experienced, "browse-by-concern", "Opened browse by concern");
+      render(); return; }
     if(action==="pdf-prev"){ if(pdfDoc && pdfPage>1){ pdfPage--; renderPdfPage(); } return; }
     if(action==="pdf-next"){ if(pdfDoc && pdfPage<pdfTotal){ pdfPage++; renderPdfPage(); } return; }
     if(action==="open-resource"){
