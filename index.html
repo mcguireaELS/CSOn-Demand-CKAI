@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <!-- Review copy is not indexed. Whether production should be is an open decision. -->
 <meta name="robots" content="noindex, nofollow" />
-<title>Onboarding and Enablement Hub</title>
+<title>ClinicalKey AI On-Demand Learning</title>
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
 <link rel="alternate icon" href="assets/favicon.png" />
 <style>
@@ -128,7 +128,7 @@
   .credit .cinner{max-width:1560px; margin:0 auto; padding:16px 30px 0; font-size:12.5px; color:var(--ink); letter-spacing:-0.02em;}
 
   /* Version stamp */
-  .vstamp{background:var(--white);}
+  .vstamp{border-top:1px solid var(--ivory); background:var(--white);}
   .vstamp .vinner{max-width:1560px; margin:0 auto; padding:18px 30px; font-size:12px; color:var(--ink);}
 
   /* Embeds */
@@ -136,11 +136,12 @@
   .embed.video .vwrap{padding:56.25% 0 0 0; position:relative;}
   .embed.video iframe{position:absolute; top:0; left:0; width:100%; height:100%; border:0;}
   .embed.pdf{background:var(--white);}
-  .pdfbar{display:flex; align-items:center; justify-content:center; gap:16px; padding:10px 12px;
+  .pdfbar{display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:16px; padding:10px 12px;
     border-bottom:1px solid var(--ivory); background:var(--paper);}
   .pdfbar button{background:var(--white); border:1px solid var(--ink); color:var(--graphite);
     border-radius:7px; padding:7px 14px; font-size:13px; font-weight:700;}
   .pdfbar button:disabled{opacity:.4; cursor:not-allowed;}
+  .pdfbar .pdfnote{font-size:12.5px; color:var(--ink);}
   .pdfcount{font-size:13px; color:var(--ink); min-width:110px; text-align:center;}
   .pdfstage{display:flex; justify-content:center; padding:18px; background:var(--sand); min-height:300px;}
   #pdfcanvas{max-width:100%; height:auto; box-shadow:0 3px 14px rgba(30,30,30,.12); background:var(--white);}
@@ -366,7 +367,7 @@
   .railtip .anyorder{margin:8px 0 0; color:var(--ink); font-size:12px;}
 
   /* ---- wrap up stage ---- */
-  .wrapintro{font-size:16px; color:var(--ink); margin:0 0 6px; max-width:68ch; line-height:1.6;}
+  .wrapintro{font-size:16px; color:var(--ink); margin:0 0 26px; max-width:68ch; line-height:1.6;}
   .asof{font-size:12.5px; color:var(--ink); margin:0 0 26px;}
   .newsgrp{margin:0 0 28px;}
   .newsgrp:last-of-type{margin-bottom:0;}
@@ -382,6 +383,7 @@
   .newsitem .nl a:focus-visible{outline:2px solid var(--blue); outline-offset:2px; border-radius:3px;}
 
   /* ---- gate, two blocks on the left ---- */
+  @media (min-width:700px){ .nowrap{white-space:nowrap;} }
   .gate-about h2.gh{font-size:40px; line-height:1.08; margin:0 0 16px; max-width:22ch;}
   .gate-about .one{font-size:17px; color:var(--ink); margin:0; max-width:48ch; line-height:1.6;}
   .gate-why{margin:34px 0 0;}
@@ -420,7 +422,7 @@
     <div class="inner">
       <div class="brand">
         <img class="mark" src="assets/elsevier-logo-graphite.svg" alt="Elsevier" />
-        <div class="prod"><div class="n">Onboarding and Enablement Hub</div><div class="s">Customer Hub</div></div>
+        <div class="prod"><div class="n">Customer Success On-Demand Hub</div><div class="s">Made by the Clinical Solutions Training and Development team</div></div>
       </div>
       <span class="role-chip" id="roleChip">&mdash;</span>
       <a class="top-switch" href="#" data-action="restart">Switch path</a>
@@ -434,8 +436,7 @@
     </div>
   </header>
   <main id="app"></main>
-  <footer class="credit"><div class="cinner">Made by the Clinical Solutions Training and Development team</div></footer>
-  <footer class="vstamp"><div class="vinner">Draft 0.13 · 20 October 2026 · Internal review copy, not for customer distribution</div></footer>
+  <footer class="vstamp"><div class="vinner">Draft 0.14 · 28 October 2026 · Internal review copy, not for customer distribution</div></footer>
 
 <script>
 (function(){
@@ -504,9 +505,8 @@
   /* Professional obligation framing, step one of each clinical path. Administrator is
      deliberately excluded, per John 26 August: faculty and admin do not carry the same
      duty of care. Register is obligation, not benefit, per the Quinnipiac session. */
-  var OBLIGATION = {
-    user: "If you are going to rely on a tool in practice, you need to know what it does and what it cannot do. The same standard you apply to an ECG tracing or a lab assay applies here. Understand how the answer was produced before you act on it. This path is the short version of that."
-  };
+  /* Why this matters was stripped on 27 October: no other step carries one. */
+  var OBLIGATION = {};
 
   /* Example queries. Requested by Matt Wilcox, Quinnipiac, 25 August: show do not tell,
      ideally a case presentation alongside the query built from it.
@@ -563,24 +563,24 @@
   };
 
   var bodyGetStarted =
-    '<p>ClinicalKey AI pairs trusted, evidence-based content with generative AI, so you can turn a clinical question into a clear, cited answer at the point of care. This section orients you to the landing page and to asking questions that get the best response.</p>'+
-    '<h4>How to complete the key actions</h4><ul>'+
-    '<li>Ask in natural language. Phrase a full, specific clinical question the way you would ask a colleague, rather than entering keywords.</li>'+
-    '<li>Be explicit. Name the demographic, condition, or drug you care about, since responses are succinct and cover a broad population by default.</li>'+
+    '<p>This guide introduces the ClinicalKey AI home page and shows how to ask questions that get the best response.</p>'+
+    '<h4>Key details</h4><ul>'+
+    '<li>Ask a full, specific clinical question in natural language, the way you would ask a colleague, rather than entering keywords.</li>'+
+    '<li>Name the demographic, condition, or drug you care about, since responses are succinct and cover a broad population by default.</li>'+
     '<li>Set the population focus using the All Ages, Adult, or Pediatrics toggle.</li>'+
-    '<li>Verify the answer. Expand Show Details on any citation to read the source excerpt, and use the suggested follow-up questions to refine.</li>'+
+    '<li>Expand Show Details on any citation to read the source excerpt, and use the suggested follow-up questions to refine the answer.</li>'+
     '<li>Save or share a question, and switch to a supported language when the toggle appears.</li>'+
-    '<li>Avoid protected health information, using it as a calculator or scoring tool, asking about medication cost or coverage, or asking for the single best choice. Ask for options with rationale instead.</li>'+
+    '<li>Do not enter protected health information, use ClinicalKey AI as a calculator or scoring tool, or ask about medication cost or coverage. Ask for options with rationale rather than a single best choice.</li>'+
     '</ul>';
 
   var bodyCme =
-    '<p>Every AI-generated response in ClinicalKey AI is worth 0.5 CME credit. The CME icon shows your running total and launches the CME/MOC dashboard, where you can redeem CME and submit MOC to specialty boards.</p>'+
-    '<h4>How to complete the key actions</h4><ul>'+
-    '<li>Earn: each ClinicalKey AI response accrues 0.5 CME automatically; the badge updates when the home page refreshes.</li>'+
-    '<li>Redeem CME: open Redeem CME, select your Conversational Search queries, click Assign, add a reason and applied use, then Continue and complete the required seven-question evaluation.</li>'+
-    '<li>Track: review redeemed credits and print transcripts from the Overview or CME History pages.</li>'+
-    '<li>Set up MOC: under Manage Boards, add each specialty board and its Board ID (up to eight ACCME-accredited boards).</li>'+
-    '<li>Redeem MOC: select the boards, attest that the content is relevant to your specialty, then submit and check status under MOC History.</li>'+
+    '<p>This guide explains how ClinicalKey AI awards CME credit, and how to redeem CME and submit MOC through the CME/MOC dashboard.</p>'+
+    '<h4>Key details</h4><ul>'+
+    '<li>Each AI-generated response earns 0.5 CME credit automatically, and the CME icon updates when the home page refreshes.</li>'+
+    '<li>To redeem CME, open Redeem CME, select your Conversational Search queries, select Assign, add a reason and applied use, then select Continue and complete the seven-question evaluation.</li>'+
+    '<li>You can review redeemed credits and print transcripts from the Overview or CME History pages.</li>'+
+    '<li>To set up MOC, add each specialty board and its Board ID under Manage Boards. Up to eight ACCME-accredited boards are supported.</li>'+
+    '<li>To redeem MOC, select your boards, attest that the content is relevant to your specialty, then submit and check the status under MOC History.</li>'+
     '</ul>';
 
   /* Content sources. Title lists are a representative selection, not the full corpus;
@@ -632,10 +632,9 @@
         '<span class="chev">'+(state.accOpen[i]?"\u2212":"+")+'</span></button>'+
         (state.accOpen[i]?'<div class="acc-body">'+inner+'</div>':'')+'</div>';
     }).join("");
-    return '<p>ClinicalKey AI draws on a curated, evidence-based library rather than the open web. The library brings together Elsevier and non-Elsevier sources, selected by subject matter experts. Here is what it is made of.</p>'+
+    return '<p>ClinicalKey AI draws on a curated, evidence-based library rather than the open web, bringing together Elsevier and non-Elsevier sources selected by subject matter experts. Use the sections below for a sample of available titles, and the links at the bottom of this page for the full list.</p>'+
       '<div class="accgroup">'+accord+'</div>'+
-      '<p style="margin-top:20px">Update frequency varies by content type, and new or updated content is supplied on a daily basis.</p>'+
-      '<div class="seealso" style="margin-top:6px"><p class="salabel">For a full title level list</p><ul>'+
+      '<div class="seealso" style="margin-top:6px"><p class="salabel">For the full title list</p><ul>'+
       '<li><a href="https://elsevierresources.com/clinicalkey-ai/content-sources/" data-action="open-resource" data-res="https://elsevierresources.com/clinicalkey-ai/content-sources/" data-restitle="Content sources" target="_blank" rel="noopener">Content sources <span class="ext">\u2197</span></a>'+
       '<span class="sad">What ClinicalKey AI draws on, by content type.</span></li>'+
       '<li><a href="https://elsevierresources.com/clinicalkey-ai/master-content-list/" data-action="open-resource" data-res="https://elsevierresources.com/clinicalkey-ai/master-content-list/" data-restitle="Master content list" target="_blank" rel="noopener">Master content list <span class="ext">\u2197</span></a>'+
@@ -645,82 +644,81 @@
 
 
   var bodyContact =
-    '<p>If you would rather work through something with a person, here is where to go.</p>';
+    '<p>This page links to the ClinicalKey AI Support Center, where you can find guidance, tutorials, and troubleshooting for using ClinicalKey AI day to day.</p>';
 
   var bodyResources =
-    '<p>Where to go once you are past setup, and who to talk to when you need a person rather than a document.</p>';
+    '<p>This page brings together the ClinicalKey AI Support Center, the adoption kit, the content source lists, and further reading for administrators.</p>';
 
   var bodyFaq =
-    '<p>The questions customers ask most often, grouped into data privacy and security, user interface, content, technology, and safety and fairness. Worth reading before you field these from your own clinicians.</p>'+
-    '<h4>What this covers</h4><ul>'+
-    '<li>HIPAA and BAA: ClinicalKey AI is designed to meet HIPAA requirements for US customers. Where an active BAA is in place, restrictions on entering PHI in the query field do not apply. Outside the US those provisions do not apply and PHI must not be entered.</li>'+
-    '<li>Content sources: journal article abstracts, medical textbooks, full text clinical overviews, drug monographs, and government publications from the FDA, CDC, and NLM, with new and updated content supplied daily.</li>'+
-    '<li>Hallucinations: the open book design answers every question from a curated library rather than from model memory, which is what keeps responses grounded.</li>'+
-    '<li>Language: questions can be asked in several languages and the answer is returned in both. The underlying content is US English and non-English responses have not been validated.</li>'+
-    '<li>Citations: users typically see six to ten linked, evidence-based citations in a response.</li>'+
+    '<p>This guide answers the questions customers ask most often about data privacy and security, the user interface, content, technology, and safety and fairness.</p>'+
+    '<h4>Key details</h4><ul>'+
+    '<li>ClinicalKey AI is designed to meet HIPAA requirements for US customers. Where an active BAA is in place, restrictions on entering PHI in the query field do not apply. Outside the US, those provisions do not apply and PHI must not be entered.</li>'+
+    '<li>Responses draw on journal article abstracts, medical textbooks, full-text clinical overviews, drug monographs, and government publications from the FDA, CDC, and NLM.</li>'+
+    '<li>An open book design answers every question from a curated library rather than from model memory, which keeps responses grounded.</li>'+
+    '<li>Questions can be asked in several languages, and the answer is returned in both. The underlying content is in US English, and non-English responses have not been validated.</li>'+
+    '<li>A typical response includes six to ten linked, evidence-based citations.</li>'+
     '</ul>';
 
   var bodyUser =
-    '<p>The full walkthrough, from signing in to earning credit. Nine sections covering access, asking questions, references, saved questions, feedback, and the mobile app.</p>'+
-    '<h4>How to complete the key actions</h4><ul>'+
-    '<li>Access: sign in at clinicalkey.com/ai. The Help button holds search tips, a product tour, the Get Started guide, and How it works.</li>'+
-    '<li>Ask: set the population focus to All Ages, Pediatrics, or Adults, then enter a clinical question in natural language. The toggle keeps your choice until you change it.</li>'+
-    '<li>Review: read the summary and bulleted response, then expand Additional Information and References for sourcing.</li>'+
-    '<li>Verify: select Details on a reference to see the content that was sourced, or click the title to open it.</li>'+
-    '<li>Save or share: keep a question for later, or share it with a colleague where sharing is configured for your institution.</li>'+
-    '<li>Follow up: use the suggested questions below a response, or ask your own.</li>'+
-    '<li>Earn credit: redeem CME from the response, and register with ClinicalKey for saved content, downloads, and remote access.</li>'+
+    '<p>This guide walks through ClinicalKey AI from signing in to earning credit, in nine sections covering access, asking questions, references, saved questions, feedback, and the mobile app.</p>'+
+    '<h4>Key details</h4><ul>'+
+    '<li>Sign in at clinicalkey.com/ai. The Help button holds search tips, a product tour, the Get Started guide, and How it works.</li>'+
+    '<li>Set the population focus to All Ages, Pediatrics, or Adults, then enter a clinical question in natural language. The toggle keeps your choice until you change it.</li>'+
+    '<li>Read the summary and bulleted response, then expand Additional Information and References to see the sources.</li>'+
+    '<li>Select Details on a reference to see the content that was used, or select the title to open it.</li>'+
+    '<li>Save a question for later, or share it with a colleague where sharing is configured for your institution.</li>'+
+    '<li>Use the suggested questions below a response to follow up, or ask your own.</li>'+
+    '<li>Redeem CME from the response, and register with ClinicalKey to save content, download, and use remote access.</li>'+
     '</ul>';
 
   var bodyImpl =
-    '<p>The milestones, activities, and strategies behind a successful rollout, typically 30 to 90 days from discovery through to post-implementation.</p>'+
-    '<h4>How to complete the key actions</h4><ul>'+
-    '<li>Work the five phases: discovery and planning, kickoff, awareness and adoption, product launch, and post-implementation.</li>'+
-    '<li>Build four strategies: communication, engagement, change management, and launch.</li>'+
-    '<li>Name your partners. Executive sponsor, project lead, clinical informaticist, librarian, IT resource, superusers, and physician champions each have a defined role and a point at which they join.</li>'+
-    '<li>Plan the touchpoints: a welcome and planning call, kickoff, training sessions, and weekly project meetings.</li>'+
-    '<li>Measure: use the active users and total queries reports to track adoption and reinforce the workflows you want.</li>'+
+    '<p>This toolkit sets out the milestones, activities, and strategies for a successful rollout, typically 30 to 90 days from discovery to post-implementation.</p>'+
+    '<h4>Key details</h4><ul>'+
+    '<li>A rollout runs in five phases: discovery and planning, kickoff, awareness and adoption, product launch, and post-implementation.</li>'+
+    '<li>Four strategies support the rollout: communication, engagement, change management, and launch.</li>'+
+    '<li>Each partner has a defined role and a point at which they join, including the executive sponsor, project lead, clinical informaticist, librarian, IT resource, superusers, and physician champions.</li>'+
+    '<li>Touchpoints include a welcome and planning call, kickoff, training sessions, and weekly project meetings.</li>'+
+    '<li>The active users and total queries reports help you track adoption and reinforce the workflows you want.</li>'+
     '</ul>';
 
   var bodySso =
-    '<p>How single sign-on works for ClinicalKey AI, how it compares with username and password access, and what each option asks of your IT team.</p>'+
-    '<h4>How to complete the key actions</h4><ul>'+
-    '<li>Understand the model: clinicians sign in with the organizational credentials they already hold. You validate who they are, and we accept it.</li>'+
-    '<li>Choose your setup: bilateral metadata exchange directly with your systems is available now. Multi-lateral exchange through federations such as InCommon is not yet available.</li>'+
-    '<li>Weigh the alternative: managed user invite uses an email-based username and a strong password, requires a user list from you, and places password resets in the Elsevier identity system rather than your own.</li>'+
-    '<li>Coordinate with IT to configure the metadata exchange. Once SSO is live, users need take no action.</li>'+
+    '<p>This guide explains how single sign-on works for ClinicalKey AI, how it compares with username and password access, and what it requires from your IT team.</p>'+
+    '<h4>Key details</h4><ul>'+
+    '<li>Clinicians sign in with the organizational credentials they already hold. Your organization validates who they are, and ClinicalKey AI accepts it.</li>'+
+    '<li>Bilateral metadata exchange directly with your systems is available now. Multilateral exchange through federations such as InCommon is not yet available.</li>'+
+    '<li>Managed user invite is the alternative. It uses an email-based username and a strong password, requires a user list from you, and handles password resets in the Elsevier identity system rather than your own.</li>'+
+    '<li>Your IT team configures the metadata exchange. Once SSO is live, users do not need to take any action.</li>'+
     '</ul>';
 
   var bodyEhr =
-    '<p>Opening ClinicalKey AI from inside an EHR session using SMART on FHIR, so a clinician reaches an answer without leaving the chart.</p>'+
-    '<h4>How to complete the key actions</h4><ul>'+
-    '<li>Confirm the prerequisite: SAML SSO or username and password access must already be in place, and the email on the ClinicalKey AI profile must match the one in the EHR user profile.</li>'+
+    '<p>By using SMART on FHIR, ClinicalKey AI can open from inside an EHR session so a clinician reaches an answer without leaving the chart. This guide covers the prerequisites and setup steps.</p>'+
+    '<h4>Key details</h4><ul>'+
+    '<li>SAML SSO or username and password access must already be in place, and the email on the ClinicalKey AI profile must match the one in the EHR user profile.</li>'+
     '<li>Set up the FHIR connection so the application can reach your data, then share your patient-facing and provider-facing endpoint URLs with Elsevier.</li>'+
     '<li>Allowlist ai.clinicalkey.com at both the network and browser level.</li>'+
-    '<li>Request the application from the vendor app showroom, where it is reviewed and approved by Elsevier.</li>'+
-    '<li>Configure the web application record, then choose a launch type: an external browser window, or the chart sidebar view.</li>'+
-    '</ul>'+
-    '<p><b>Note.</b> The current documentation covers Epic only. Support for other EHRs is on the roadmap, so confirm timing with your Elsevier contact before planning around it.</p>';
+    '<li>Request the application from the vendor app showroom, where Elsevier reviews and approves it.</li>'+
+    '<li>Configure the web application record, then choose a launch type, either an external browser window or the chart sidebar view.</li>'+
+    '</ul>';
 
   var bodyLink =
-    '<p>A link resolver connects citations in ClinicalKey AI to the full text your library already pays for, so clinicians reach the article rather than a paywall.</p>'+
-    '<h4>How to complete the key actions</h4><ul>'+
-    '<li>Confirm your institution subscribes to a resolver service, for example Ex Libris, EBSCO, or OCLC.</li>'+
+    '<p>This guide explains how to set up a link resolver, which connects citations in ClinicalKey AI to the full text your library already subscribes to.</p>'+
+    '<h4>Key details</h4><ul>'+
+    '<li>Confirm that your institution subscribes to a resolver service, such as Ex Libris, EBSCO, or OCLC.</li>'+
     '<li>Submit a request through the Support Center asking for link resolver setup.</li>'+
     '<li>Include your resolver base URL, which must support the OpenURL standard. Your systems or e-resources librarian will have it.</li>'+
-    '<li>Supply a logo as a publicly accessible image URL. File uploads are not supported, and the image is scaled to 24 pixels high, so send the best quality version you have, cropped close.</li>'+
-    '<li>Once support confirms setup, check that resolver links appear alongside citations.</li>'+
+    '<li>Supply your logo as a publicly accessible image URL. File uploads are not supported, and the image is scaled to 24 pixels high, so send the best quality version you have, cropped close.</li>'+
+    '<li>Once Support confirms setup, check that resolver links appear alongside citations.</li>'+
     '</ul>';
 
   var bodyApp =
-    '<p>ClinicalKey AI is available on iOS and Android, so the question you would ask at a workstation can be asked at the bedside. This section covers downloading the app, finding the core features, and using talk-to-text.</p>'+
-    '<h4>How to complete the key actions</h4><ul>'+
-    '<li>Download: scan the Google Play or Apple App Store QR code in the guide. The app is free of charge, but you or your institution must be subscribed to ClinicalKey AI.</li>'+
-    '<li>Sign in using the email address associated with your user profile.</li>'+
-    '<li>Ask: enter your question in natural language in the Ask a question here box, and change the population focus as needed.</li>'+
-    '<li>Claim credit: launch My CME from the app to claim and redeem credits.</li>'+
+    '<p>ClinicalKey AI offers a mobile application available on iOS and Android devices. This guide covers downloading the app, finding the core features, and using talk-to-text.</p>'+
+    '<h4>Key details</h4><ul>'+
+    '<li>Scan the Google Play or Apple App Store QR code in the guide to download the app. The app is free, but you or your institution must subscribe to ClinicalKey AI.</li>'+
+    '<li>Sign in with the email address associated with your user profile.</li>'+
+    '<li>Enter your question in natural language in the Ask a question here box, and change the population focus as needed.</li>'+
+    '<li>Launch My CME from the app to claim and redeem credits.</li>'+
     '<li>Open the menu in the top left for references, calculators, and saved and recent questions.</li>'+
-    '<li>Use talk-to-text: tap the microphone inside the question box and speak. A dotted line under the field means it is recording, and pause stops it temporarily.</li>'+
+    '<li>Tap the microphone inside the question box to use talk-to-text. A dotted line under the field shows it is recording, and pause stops it temporarily.</li>'+
     '<li>Account settings in the top right hold How It Works, Contact Us and Help, and the Registered User Agreement.</li>'+
     '</ul>';
 
@@ -731,9 +729,12 @@
 
      THIS CONTENT GOES STALE. It needs a named owner and a refresh cadence before the
      hub is customer facing. Andrew flagged this; it is not resolved. */
-  var NEWS_ASOF = "Current as of August 2026";
   var NEWS = [
-    {t:"New in ClinicalKey AI",
+    {t:"Learning and research",
+     i:[{h:"Gen AI Academy for Health",
+         d:"A free, self-paced course on using generative AI responsibly in practice, designated for up to 1.5 AMA PRA Category 1 Credits, with subtitles in English, French, German, Portuguese, Spanish and Turkish.",
+         u:ACADEMY_URL, ut:"Enroll in the Academy"}]},
+    {t:"Latest updates",
      i:[{h:"Reasoning stepper",
          d:"A step by step view of how an answer was assembled, so a response is easier to follow and to verify."},
         {h:"Rerun",
@@ -741,26 +742,15 @@
         {h:"Asked on dates",
          d:"Every question on the response page now carries a timestamp, which makes a long conversation easier to track."},
         {h:"Invite by link",
-         d:"A single secure link or QR code for your organization. Recipients click, verify their email, and get access, with no single sign-on needed. Your account manager can generate one."}]},
-    {t:"Content added between April and June",
-     i:[{h:"More than 120 additions and updates",
-         d:"12 new book titles, 22 new editions, 15 new journals, 20 new drug monographs, 7 new clinical overviews, and 56 updated clinical overviews."},
-        {h:"Titles worth knowing about",
-         d:"The Harriet Lane Handbook, Campbell\u2019s Operative Orthopaedics, Brenner and Rector\u2019s The Kidney, Netter Atlas of Human Anatomy, Seidel\u2019s Guide to Physical Examination, and Diabeto-Cardiology, second edition."}]},
-    {t:"For administrators",
-     i:[{h:"KBART reports page rebuilt",
+         d:"A single secure link or QR code for your organization. Recipients click, verify their email, and get access, with no single sign-on needed. Your account manager can generate one."},
+        {h:"KBART reports page rebuilt",
          d:"The reports page on the Resource Center now has search, filters by audience and by edition or market, downloads by content type, a choice of TXT or Excel, and a clearer layout."}]},
-    {t:"Learning and research",
-     i:[{h:"Gen AI Academy for Health",
-         d:"A free, self-paced course on using generative AI responsibly in practice, designated for up to 1.5 AMA PRA Category 1 Credits, with subtitles in English, French, German, Portuguese, Spanish and Turkish.",
-         u:ACADEMY_URL, ut:"Enroll in the Academy"},
-        {h:"Monthly ClinicalKey training sessions",
-         d:"Live sessions in six languages across a range of times, each one recorded if the timing does not work."},
-        {h:"Clinician of the Future 2026",
-         d:"The latest edition looks at how doctors and nurses are responding to current pressures, where trust in AI is growing, and how views differ between the two groups."}]}
+    {t:"Product spotlight",
+     i:[{h:"Deep Research",
+         d:"For questions that need more than a quick answer, Deep Research produces a structured, referenced report on a clinical topic, citing 20 or more peer-reviewed sources. It is built for teaching prep, evidence review and protocol discussion, not patient-specific decisions. Select Deep Research from the toggle above the question box. Reports take about three minutes, so keep the tab open while it runs, and keep questions under 500 characters."}]}
   ];
 
-  var bodyIntro = '<p>A short overview of what ClinicalKey AI is, how it fits into clinical workflow, and what makes its answers different from a general purpose AI tool.</p>';
+  var bodyIntro = '<p>This video provides a short overview of what ClinicalKey AI is, how it fits into clinical workflow, and how its answers differ from a general purpose AI tool.</p>';
 
   var OWNER_SC = "Support Center";
   function pending(t){
@@ -771,47 +761,47 @@
   /* The video sits on the clinician path only. An administrator is deploying the
      product rather than using it, and in most cases has already seen a tour. */
   var introStep =
-    {title:"Introducing ClinicalKey AI", type:"video", cat:"Get oriented", concern:"What is ClinicalKey AI?", mins:5,
+    {title:"Introducing ClinicalKey AI", type:"video", cat:"Initial learning", concern:"What is ClinicalKey AI?", mins:5,
      embed:{kind:"vimeo", src:VIMEO}, body:bodyIntro};
 
   var wrapStep =
-    {title:"Wrap up", type:"wrapup", cat:"Keep going", concern:"What has changed recently?", mins:4};
+    {title:"News and updates", type:"wrapup", cat:"Next steps", concern:"What has changed recently?", mins:4};
 
   var shared = [
-    {title:"Get Started Guide", type:"doc", cat:"Get oriented", concern:"How do I get started?", mins:5, exq:true,
+    {title:"Get Started Guide", type:"doc", cat:"Initial learning", concern:"How do I get started?", mins:5, exq:true,
      embed:{kind:"pdf", src:GUIDE_GS}, guide:SHARE.gs, body:bodyGetStarted},
-    {title:"Frequently Asked Questions", type:"doc", cat:"Get oriented", concern:"Common first questions", mins:7,
+    {title:"Frequently Asked Questions", type:"doc", cat:"Initial learning", concern:"Common first questions", mins:5,
      embed:{kind:"pdf", src:DOC.faq}, guide:SHARE.faq, body:bodyFaq}
   ];
   var userSteps = [
-    {title:"User Guide", type:"doc", cat:"Use it day to day", concern:"Everyday tasks, step by step", mins:13,
+    {title:"User Guide", type:"doc", cat:"Deeper understanding", concern:"Everyday tasks, step by step", mins:10,
      embed:{kind:"pdf", src:DOC.user}, guide:SHARE.user, body:bodyUser},
-    {title:"Earn CME & Redeem MOC Credit", type:"doc", cat:"Continuing education", concern:"Earn CME / redeem MOC credit", mins:6,
+    {title:"Earn CME & Redeem MOC Credit", type:"doc", cat:"Deeper understanding", concern:"Earn CME / redeem MOC credit", mins:5,
      embed:{kind:"pdf", src:GUIDE_CME}, guide:GUIDE_CME, body:bodyCme,
      also:[{u:ACADEMY_URL, t:"Gen AI Academy for Health", d:"A free, self-paced course on using generative AI responsibly in practice. Designated for up to 1.5 AMA PRA Category 1 Credits."}]},
-    {title:"App Guide", type:"doc", cat:"Use it day to day", concern:"Use it on mobile", mins:5,
+    {title:"App Guide", type:"doc", cat:"Deeper understanding", concern:"Use it on mobile", mins:4,
      embed:{kind:"pdf", src:DOC.app}, guide:GUIDE_APP, body:bodyApp},
-    {title:"Content Sources", type:"sources", cat:"Keep going", concern:"What does ClinicalKey AI draw on?", mins:4,
+    {title:"Content Sources", type:"sources", cat:"Deeper understanding", concern:"What does ClinicalKey AI draw on?", mins:3,
      body:null},
-    {title:"Contact", type:"resources-clinician", cat:"Keep going", concern:"Where do I go for help?", mins:3,
+    {title:"Contact", type:"resources-clinician", cat:"Next steps", concern:"Where do I go for help?", mins:2,
      body:bodyContact}
   ];
   var adminSteps = [
-    {title:"User Guide", type:"doc", cat:"Know the product", concern:"See what my users see", mins:13,
+    {title:"User Guide", type:"doc", cat:"Deeper understanding", concern:"See what my users see", mins:10,
      embed:{kind:"pdf", src:DOC.user}, guide:SHARE.user, body:bodyUser},
     /* Same content as the clinician step. Placed with the product knowledge, since an
        administrator needs it to answer coverage questions before rollout. */
-    {title:"Content Sources", type:"sources", cat:"Know the product", concern:"Where do the answers come from?", mins:4,
+    {title:"Content Sources", type:"sources", cat:"Deeper understanding", concern:"Where do the answers come from?", mins:3,
      body:null},
-    {title:"Implementation Toolkit", type:"doc", cat:"Deploy and configure", concern:"Plan our rollout", mins:9,
+    {title:"Implementation Toolkit", type:"doc", cat:"Setup", concern:"Plan our rollout", mins:8,
      embed:{kind:"pdf", src:DOC.impl}, guide:SHARE.impl, body:bodyImpl},
-    {title:"SAML SSO Guide", type:"doc", cat:"Deploy and configure", concern:"Configure single sign-on (SSO)", mins:5,
+    {title:"SAML SSO Guide", type:"doc", cat:"Setup", concern:"Configure single sign-on (SSO)", mins:5,
      embed:{kind:"pdf", src:DOC.sso}, guide:SHARE.sso, body:bodySso},
-    {title:"EHR Integration", type:"doc", cat:"Deploy and configure", concern:"Set up EHR integration", mins:6,
+    {title:"EHR Integration", type:"doc", cat:"Setup", concern:"Set up EHR integration", mins:5,
      embed:{kind:"pdf", src:DOC.ehr}, guide:SHARE.ehr, body:bodyEhr},
-    {title:"Link Resolver Setup", type:"doc", cat:"Deploy and configure", concern:"Connect our library holdings", mins:3,
+    {title:"Link Resolver Setup", type:"doc", cat:"Setup", concern:"Connect our library holdings", mins:3,
      embed:{kind:"pdf", src:DOC.link}, guide:SHARE.link, body:bodyLink},
-    {title:"Additional Resources & Contacts", type:"resources", cat:"Keep going", concern:"Where do I go next?", mins:4,
+    {title:"Additional Resources", type:"resources", cat:"Next steps", concern:"Where do I go next?", mins:3,
      body:bodyResources}
   ];
 
@@ -1017,7 +1007,7 @@
   /* ---- Screens ---- */
   function gateAside(){
     return '<aside class="gate-about">'+
-      '<h2 class="gh">The Customer Success On-Demand Hub</h2>'+
+      '<h2 class="gh">ClinicalKey AI <span class="nowrap">On-Demand Learning</span></h2>'+
       '<p class="one">A guided way to get up and running, with the right materials for your role gathered in one place.</p>'+
       '<p class="wl">What to expect</p><ul>'+
       '<li>On-demand resources, there whenever you need them</li>'+
@@ -1025,7 +1015,7 @@
       '<li>Supported information, with a route to a person if you need one</li>'+
       '</ul>'+
       '<section class="gate-why"><h2><em>Why</em> ClinicalKey AI</h2>'+
-      '<p>ClinicalKey AI is an acceleration layer; it speeds up the move from question to evidence while keeping every answer traceable to a source. Content is curated by subject matter experts from both Elsevier and non-Elsevier publications, and every response carries citations you can open and check.</p>'+
+      '<p>From quick answers to deeper evidence, in one trusted workflow. ClinicalKey AI is a clinical decision support tool powered by responsible AI. It turns complexity into clarity by putting evidence-based content within reach while you are with the patient. It is built on a proprietary, full-text, copyright-cleared clinical knowledge base, and every response links to the supporting evidence. Enterprise-grade security lets your organization innovate with sensible guardrails.</p>'+
       '</section></aside>';
   }
 
@@ -1066,12 +1056,11 @@
 
   function landing(){
     return '<div class="wrap landing"><div class="ltop"><div class="lleft"><div class="hero">'+
-      '<p class="eyebrow">Customer Success · Your Digital Experience</p>'+
       '<h1>Where do I <em>start</em></h1><div class="rule"></div>'+
-      '<p class="lede">Pick the path that fits your role, or the role you are training for, and we will take you step by step.</p></div>'+
+      '<p class="lede">Pick the path that fits your role, or the role you are training for, to get a tailored learning experience.</p></div>'+
       '<div class="cards">'+
-        card("admin","I am an administrator","Setting up and deploying ClinicalKey AI for my institution.",["Plan and execute your launch","Support your clinicians","Optimize adoption"])+
-        card("user","I am a clinician","Using ClinicalKey AI in my own practice.",["Optimize your clinical queries","Earn CME and MOC credit","Access on mobile devices"])+
+        card("admin","I am an administrator","Understanding ClinicalKey AI and driving adoption at your organization.",["Plan and execute your launch","Support your clinicians","Optimize adoption"])+
+        card("user","I am a clinician","Using ClinicalKey AI in my practice.",["Optimize your clinical queries","Earn CME and MOC credit","Access on mobile devices"])+
       '</div></div>'+layerStack()+'</div></div>';
   }
   function card(role,title,who,b){
@@ -1083,27 +1072,21 @@
 
     var dc=steps.filter(function(x){return state.done[key(x)];}).length, pct=Math.round((dc/total)*100);
     var cSteps=contentSteps(steps), cTotal=cSteps.length, vc=viewedCount(steps);
-    var rail='<aside class="rail"><p class="rtitle">'+j.label+'</p><p class="rmeta">'+vc+' of '+cTotal+' viewed \u00b7 about '+pathMins(cSteps)+' minutes in total</p>'+
+    var rail='<aside class="rail"><p class="rtitle">'+j.label+'</p><p class="rmeta">'+vc+' of '+cTotal+' done \u00b7 about '+pathMins(cSteps)+' minutes in total</p>'+
       '<div class="bar"><span style="width:'+Math.round(vc/cTotal*100)+'%"></span></div><ul class="steps">'+
       steps.map(function(x,i){ var cls=(i===state.idx?"active ":"")+(state.done[key(x)]?"done":"");
         if(x.type==="wrapup"){
           var ready=allViewed(steps);
-          var left=unviewed(steps), shown=left.slice(0,4), hidden=left.length-shown.length;
-          return '<li class="term '+(ready?"ready ":"islocked ")+cls+'" '+
+              return '<li class="term '+(ready?"ready ":"islocked ")+cls+'" '+
             (ready?'data-action="goto-step" data-idx="'+i+'"':'data-action="wrap-locked"')+
             ' tabindex="0" role="button"'+(ready?'':' aria-disabled="true"')+'>'+
             '<span class="mk">'+SQUARE+'</span><span class="stxt">'+x.title+
-            '<span class="smin">'+(ready?"Ready":"Not open yet")+'</span></span></li>'+
-            (ready?'':'<div class="railtip" id="railtip"><span class="rt">'+
-              (left.length===1?"One step left to view":left.length+" steps left to view")+'</span><ul>'+
-              shown.map(function(u){ return '<li>'+u.t+'</li>'; }).join("")+'</ul>'+
-              (hidden>0?'<p class="anyorder">and '+hidden+' more</p>':'')+
-              '<p class="anyorder">Any order is fine. Nothing here is graded.</p></div>');
+            '<span class="smin">'+(ready?"Ready":"Not open yet")+'</span></span></li>';
         }
         return '<li class="'+cls+'" data-action="goto-step" data-idx="'+i+'" tabindex="0" role="button">'+
           '<span class="mk">'+RING+'</span><span class="stxt">'+x.title+
           (state.done[key(x)]
-            ? '<span class="smin"><span class="vchk">'+CHK+'Viewed</span></span>'
+            ? '<span class="smin"><span class="vchk">'+CHK+'Done</span></span>'
             : (x.mins?'<span class="smin">'+timeLabel(x, true)+'</span>':''))+
           '</span></li>'; }).join("")+
       '</ul><button class="switch" data-action="restart">Switch path</button></aside>';
@@ -1111,11 +1094,13 @@
     var isFirst=state.idx===0, isWrap=(s.type==="wrapup");
     var lastContent=(state.idx===cTotal-1);
 
-    var tools = (s.embed && s.embed.kind==="pdf" && s.type!=="sources" && s.type!=="resources-clinician") ?
+    var tools = (s.embed && s.embed.kind==="vimeo") ?
+      '<div class="doc-tools"><button class="dt share" data-action="share-guide">Share this video</button></div>' :
+      (s.embed && s.embed.kind==="pdf" && s.type!=="sources" && s.type!=="resources-clinician") ?
       '<div class="doc-tools">'+
       '<button class="dt primary" data-action="toggle-expand">'+(state.expanded?"Exit full size":"View full size")+'</button>'+
       (s.guide?'<a class="dt" data-action="open-guide" data-guide="'+s.guide+'" href="'+s.guide+'" target="_blank" rel="noopener">Download this guide</a>':'')+
-      (s.guide?'<button class="dt share" data-action="share-guide" data-guide="'+s.guide+'">Share this guide with a colleague</button>':'')+
+      (s.guide?'<button class="dt share" data-action="share-guide" data-guide="'+s.guide+'">Share this guide</button>':'')+
       '</div>' : '';
 
     /* Advance wording follows what the record can actually attest to. Viewing is
@@ -1123,10 +1108,9 @@
     var footBtn = "";
     if(!isWrap){
       var nextIsWrap = lastContent;
-      var verb = state.done[key(s)] ? "" : "Viewed, ";
-      var dest = nextIsWrap ? "wrap up" : "next step";
-      var lbl = verb ? verb+dest : dest.charAt(0).toUpperCase()+dest.slice(1);
-      footBtn = '<button class="btn-primary" data-action="next">'+lbl+'</button>';
+      /* Done, per the 21 October review: the learner signing off a step, sized to match
+         Previous. It marks the step and moves on. */
+      footBtn = '<button class="btn-primary" data-action="next">Done</button>';
     }
 
     var eyebrow = isWrap
@@ -1147,10 +1131,7 @@
   }
 
   function wrapUpScreen(j){
-    return '<p class="wrapintro">That is the '+j.label.toLowerCase()+
-      ' covered. Nothing here was graded, and every step stays open if you want to go back to one. '+
-      'Before you go, here is what has changed recently.</p>'+
-      '<p class="asof">'+NEWS_ASOF+'</p>'+
+    return '<p class="wrapintro">See below for what has changed with ClinicalKey AI, including enhancements, new content, and other relevant information.</p>'+
       NEWS.map(function(g){
         return '<section class="newsgrp"><h4>'+g.t+'</h4>'+
           g.i.map(function(n){
@@ -1166,9 +1147,6 @@
       '<div class="rescard"><h4>ClinicalKey AI Support Center</h4>'+
       '<p>Guidance, tutorials and troubleshooting for using ClinicalKey AI day to day.</p>'+
       '<a class="dt primary" href="'+SUPPORT_URL+'" data-action="open-resource" data-res="'+SUPPORT_URL+'" data-restitle="Support Center" target="_blank" rel="noopener">Open the Support Center \u2197</a></div>'+
-      '<div class="rescard"><h4>Talk to someone</h4>'+
-      '<p>Request time with the team that supports your account.</p>'+
-      '<a class="dt primary" href="'+CALL_URL+'" data-action="open-resource" data-res="'+CALL_URL+'" data-restitle="Schedule a call" target="_blank" rel="noopener">Schedule a call \u2197</a></div>'+
       '</div>';
   }
 
@@ -1179,9 +1157,6 @@
       '<p class="rsub">Browse by Orders and renewals, Access, Onboarding, Training, Using the product, or Content. The top answers cover single sign-on contacts, supported devices, claiming CME and MOC, and how ClinicalKey AI manages hallucinations.</p>'+
       '<a class="dt primary" href="'+SUPPORT_URL+'" data-action="open-resource" data-res="'+SUPPORT_URL+'" data-restitle="Support Center" target="_blank" rel="noopener">Open the Support Center \u2197</a></div>'+
 
-      '<div class="rescard"><h4>Talk to someone</h4>'+
-      '<p>If you would rather work through something with a person, you can request time with the team that supports your account.</p>'+
-      '<a class="dt primary" href="'+CALL_URL+'" data-action="open-resource" data-res="'+CALL_URL+'" data-restitle="Schedule a call" target="_blank" rel="noopener">Schedule a call \u2197</a></div>'+
 
       '<div class="rescard wide"><h4>Driving adoption at your organization</h4>'+
       '<p>Time-pressed clinicians do not always discover what ClinicalKey AI can do on their own. This kit gives you ready messaging, a short feature overview, and promotional assets, including flyers, email templates, and banner ads, so you can raise awareness across your organization and steer people away from unsanctioned generic AI tools.</p>'+
@@ -1232,6 +1207,7 @@
     }
     if(s.embed && s.embed.kind==="pdf"){
       return '<div class="embed pdf"><div class="pdfbar">'+
+        '<span class="pdfnote">Note: Hyperlink use requires downloading this guide.</span>'+
         '<button id="pdfprev" data-action="pdf-prev">Previous</button>'+
         '<span class="pdfcount" id="pdfcount">Loading</span>'+
         '<button id="pdfnext" data-action="pdf-next">Next</button></div>'+
@@ -1243,14 +1219,14 @@
       '<span style="font-size:13.5px;color:var(--ink)">Live asset renders here once its link is added.</span></div></div>';
   }
   function finder(steps){
-    var order=["Get oriented","Ask better questions","Deploy and configure","Know the product","Use it day to day","Continuing education","Keep going"], groups={};
+    var order=["Initial learning","Setup","Deeper understanding","Next steps"], groups={};
     steps.forEach(function(s,i){ (groups[s.cat]=groups[s.cat]||[]).push({s:s,i:i}); });
     var body=order.filter(function(c){return groups[c];}).map(function(c){
       var chips=groups[c].map(function(o){ return '<button class="chip'+(o.i===state.idx?" active":"")+'" data-action="goto-step" data-idx="'+o.i+'">'+o.s.concern+'</button>'; }).join("");
       return '<div class="cgroup"><span class="clabel">'+c+'</span><div class="chips">'+chips+'</div></div>';
     }).join("");
     return '<div class="finder'+(state.indexOpen?" open":"")+'"><button class="finder-head" data-action="toggle-index" aria-expanded="'+(state.indexOpen?"true":"false")+'">'+
-      '<span class="fh-txt"><span class="fh-title">Looking for something specific?</span><span class="fh-sub">Jump straight to a topic and land on the right step</span></span>'+
+      '<span class="fh-txt"><span class="fh-title">Jump to a topic</span></span>'+
       '<span class="chev">'+(state.indexOpen?"\u25be":"\u25b8")+'</span></button><div class="finder-body">'+body+'</div></div>';
   }
   function done(){
@@ -1311,9 +1287,8 @@
   /* A video is watched, a guide is read. The estimate should say which. */
   function timeLabel(st, brief){
     if(!st.mins) return "";
-    if(st.type==="video") return st.mins+" min to watch";
-    return brief ? "about "+st.mins+" min"
-                 : "About "+st.mins+" minutes, including the guide";
+    /* One label for every kind of step, per the 21 October review. */
+    return brief ? st.mins+" min" : "Estimated review time: "+st.mins+" min";
   }
   function metaRow(st){
     if(!st.mins) return "";
@@ -1472,11 +1447,7 @@
       }
       state.expanded=false; saveProgress(); render(); return;
     }
-    if(action==="wrap-locked"){
-      var rt=document.getElementById("railtip");
-      if(rt) rt.classList.toggle("show");
-      return;
-    }
+    if(action==="wrap-locked"){ return; }
     if(action==="prev"){ if(state.idx>0){ state.idx--; state.expanded=false; render(); } return; }
     if(action==="restart"){ state.screen="landing"; state.role=null; state.idx=0; state.done={};
       state.expanded=false; state.resumeOffer=null; render(); return; }
